@@ -1,4 +1,4 @@
-Find what you need faster … Home is your new landing page and surfaces your most relevant files and folders html {
+html {
     font-family: sans-serif;
     line-height: 1.15;
     -webkit-text-size-adjust: 100%;
@@ -33,11 +33,6 @@ body {
 .side-bar {
     background-color: rgb(236, 235, 235);
     height: auto;
-}
-
-.screen {
-    height: 100%;
-    background: url(../Images/bg.png)repeat;
 }
 
 .profile {
@@ -352,7 +347,7 @@ body {
     padding: 0 2vw;
     height: 3vw;
     background: rgb(206, 206, 206);
-    bottom: 1vw;
+    bottom: 0;
     -webkit-box-shadow: 0 1px 4px 0 rgba(15, 15, 20, .1);
     box-shadow: 0 1px 4px 0 rgba(15, 15, 20, .1);
     left: 0;
@@ -438,7 +433,7 @@ h3,
     top: 64px;
 }
 
-section#intro {
+banner#banner {
     margin-bottom: -64px;
 }
 
@@ -465,7 +460,7 @@ section#intro {
     -webkit-transform: translateX(100%);
 }
 
-.navList{
+.navList {
     overflow: auto;
 }
 
@@ -611,10 +606,11 @@ section#intro {
     font-size: 17px;
 }
 
-.nfil{
+.nfil {
     padding-left: 25px;
 }
-.nfir{
+
+.nfir {
     padding-right: 25px;
 }
 
@@ -835,3 +831,121 @@ section#intro {
         -webkit-transform: translateX(-0%);
     }
 }
+
+
+.screen {
+    background: url(../Images/bg.png)repeat;
+    overflow: auto ;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.screen::-webkit-scrollbar {
+    display: none;
+}
+
+
+.banner {
+    background: url("../Images/ArifZaid-Profile.jpeg") no-repeat top center/cover;
+    position: relative;
+    width: 100%;
+}
+
+.layer {
+    background-color: rgba(31, 1, 1, 0.39);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.s-padding-50 {
+    padding-top: 64px;
+}
+
+#banner.banner .container {
+    color: rgb(0, 0, 0);
+    font-weight: 200;
+    left: 0;
+    position: absolute;
+    top: 0;
+    padding: 3vw 3vw;
+}
+
+#banner.banner .container *:not(span) {
+    font-weight: 300;
+    line-height: 150%;
+    padding: 0 30px;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+#banner.banner .underline {
+    border-bottom: 5px solid #008073;
+}
+
+#banner.banner .teal {
+    padding: 0 10px;
+}
+
+#banner h2 {
+    font-size: calc(1em + 3vw);
+    color: #fcf7f3b7;
+}
+
+.teal{
+    background-color: #008073!important;
+}
+
+#about{
+    margin-top: -5em;
+}
+
+.section {
+    padding-bottom: 30px;
+    padding-top: 0;
+    position: relative;
+}
+.section h3 {
+    font-weight: 200;
+    margin-bottom: 60px;
+    margin-top: 0;
+    padding: 30px 40px;
+    text-transform: uppercase;
+    font-family: "Roboto",sans-serif;
+}
+
+.section h3 {
+    font-size: 2.92rem;
+    line-height: 3.212rem;
+}
+
+.flow-text{
+    font-size: 1.5em;
+    font-weight: 300;
+    text-align: justify;
+    text-justify: auto;
+}
+
+#about 
+.container {
+    padding: 0 10.5vw;
+    margin: 0 auto;
+    max-width: 1280px;
+    width: 90%;
+}
+
+blockquote {
+    border-left: 5px solid #795548;
+    color: #795548;
+    font-size: 125%;
+    font-weight: 400;
+    margin: 20px 0;
+    padding-left: 1.5rem;
+  }
+  
+  blockquote * {
+    font-size: inherit;
+    line-height: inherit;
+  }

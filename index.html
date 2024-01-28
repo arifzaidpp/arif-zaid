@@ -46,7 +46,7 @@
         <div class="fixed-top col-12 d-none d-lg-block d-xl-block d-xxl-block"></div>
         <div class="fixed-bottom col-12 d-none d-lg-block d-xl-block d-xxl-block"></div>
         <div class="page col-12 d-flex justify-content-center" id="page">
-            <div class="side-bar col-2 d-none d-md-none d-sm-none d-lg-block" id="side-bar">
+            <div class="side-bar d-flex col-2 d-none d-md-none d-sm-none d-lg-block" id="side-bar">
                 <div class="Profile-details">
                     <div class="profile" id="profile">
                         <div class="Profile-Image">
@@ -88,12 +88,6 @@
                                     <span>About</span>
                                 </a>
                             </li>
-                            <li class="nav-trending-up">
-                                <a aria-label="Navigate to the Experience section" href="#experience">
-                                    <i class="mdi-action-trending-up small"></i>
-                                    <span>Experience</span>
-                                </a>
-                            </li>
                             <li class="nav-web">
                                 <a aria-label="Navigate to the Projects section" href="#projects">
                                     <i class="mdi-av-web small"></i>
@@ -109,7 +103,7 @@
                             <li class="nav-grade">
                                 <a aria-label="Navigate to the Awards section" href="#awards">
                                     <i class="mdi-action-grade small"></i>
-                                    <span>Awards</span>
+                                    <span>Certificets</span>
                                 </a>
                             </li>
                             <li class="nav-school">
@@ -149,12 +143,13 @@
                 </div>
             </div>
 
-            <nav class="col-12 	d-block d-sm-block d-md-block d-lg-none only trigger z-depth-1">
+            <nav class="col-12 d-flex d-block d-sm-block d-md-block d-lg-none only trigger z-depth-1">
                 <a aria-label="Toggle visibility of the mobile navbar" href="#" data-activates="slide-out"
                     class="button-collapse"><button class="navbar-toggler collapsed" id="shownav" type="button"
                         data-toggle="collapse" data-target="#nav-list-sm" aria-controls="navbarDefault"
                         aria-expanded="false" aria-label="Toggle navigation"><i
-                            class="mdi-navigation-menu"></i></button></a>
+                            class="mdi-navigation-menu"></i></button>
+                </a>
                 <div class="name-title">
                     <a id="name" aria-label="Navigate to the beginning of the page" href="#main" class="teal-text">
                         <img src="./Images/arifzaid-logo-icon.png" alt="">
@@ -163,7 +158,7 @@
                     <span class="brown-text light">Mern Stack Developer</span>
                 </div>
             </nav>
-            <div class="nav-list-sm dismiss d-none" id="nav-list-sm scrollable">
+            <div class="nav-list-sm dismiss d-flex d-none" id="nav-list-sm scrollable">
                 <div class="nav-list-small col-12 justify-content-center">
                     <ul>
 
@@ -208,12 +203,6 @@
                                 <a aria-label="Navigate to the About section" href="#about">
                                     <i class="mdi-social-person small"></i>
                                     <span>About</span>
-                                </a>
-                            </li>
-                            <li class="nav-trending-up">
-                                <a aria-label="Navigate to the Experience section" href="#experience">
-                                    <i class="mdi-action-trending-up small"></i>
-                                    <span>Experience</span>
                                 </a>
                             </li>
                             <li class="nav-web">
@@ -271,18 +260,55 @@
                     </ul>
                 </div>
             </div>
+            <div class="screen col-12 col-sm-12 col-md-12 col-lg-9" id="screen">
+                <div class="banner col-12" id="banner">
+                    <div class="layer"></div>
+                    <div class="container">
+                        <h2 class="layer-h2">I want to <span class="teal">make things</span> <br>that <span
+                                class="underline"> make a difference</span>.</h2>
+                    </div>
+                </div>
+                <div id="about" class="section scrollspy col-12">
+                    <h3 class="page-title white-text teal">About</h3>
+                    <div class="container flow-text">
+                        <blockquote>
+                            <h2>
+                                Mission-driven full stack developer with a passion for thoughtful
+                                UI design, collaboration, and teaching.
+                            </h2>
+                        </blockquote>
+                        <p>
+                            I’ve always sought out opportunities and challenges that are
+                            meaningful to me. Although my professional path has taken many
+                            twists and turns — from touring and recording artist, to employee of
+                            the year at a non-profit, to dean's scholar at UPenn, to small
+                            business owner and entrepreneur — I've never stopped engaging my
+                            passion to help others and solve problems.
+                        </p>
+                        <p>
+                            As a web developer, I enjoy using my obsessive attention to detail,
+                            my unequivocal love for making things, and my mission-driven work
+                            ethic to literally change the world. That's why I’m excited to make
+                            a big impact at a high growth company.
+                        </p>
+                        <p>
+                            <strong>Current Focus</strong>:&nbsp;<a
+                                aria-label="Navigate to the Inclusive Design Patterns homepage"
+                                href="https://www.smashingmagazine.com/inclusive-design-patterns/">Accessibility</a>&nbsp;//&nbsp;<a
+                                aria-label="Navigate to the Full Stack React homepage"
+                                href="https://www.fullstackreact.com/">React</a>&nbsp;//&nbsp;<a
+                                aria-label='Navigate to the article "Scalable CSS"'
+                                href="https://mrmrs.github.io/writing/2016/03/24/scalable-css/">Design Systems</a>
+                        </p>
+                    </div>
+                </div>
+                
 
+
+
+            </div>
         </div>
     </div>
-    <div class="screen col-9 col-2 d-none d-lg-block d-xl-block d-xxl-block">
-        <div class="banner">
-<img src="./Images/ArifZaid-Profile.jpeg" alt="">
-        </div>
-    </div>
-    <script>
-
-
-    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
