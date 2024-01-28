@@ -65,3 +65,15 @@ $('#closenav').click(function (event) {
   }
   event.preventDefault();
 });
+
+
+
+
+
+$('#live').click(function () {
+  if ($('.live').hasClass('show')) {
+    $('.live').removeClass('show');
+  }else{
+    $('.live').removeClass('show');
+  }
+})

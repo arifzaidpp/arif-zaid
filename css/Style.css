@@ -91,7 +91,7 @@ body {
     transform: translateX(20px);
     -webkit-transition: .4s ease-in-out;
     transition: .4s ease-in-out;
-    z-index: 99;
+    z-index: 22;
 }
 
 .live-lamp:hover:before {
@@ -101,14 +101,14 @@ body {
 }
 
 .live-lamp::after {
-    position: relative;
+    position: absolute;
     content: attr(data-title);
     width: 128px;
     display: block;
     padding: 5px 10px;
     top: -10px;
-    left: 35px;
-    font-size: .7vw;
+    left: 1.85vw;
+    font-size: 12px;
     font-weight: 200;
     -webkit-box-shadow: 0 1px 4px 0 rgba(15, 15, 20, .1);
     box-shadow: 0 1px 4px 0 rgba(15, 15, 20, .1);
@@ -833,11 +833,15 @@ banner#banner {
 }
 
 
+
 .screen {
+    position: relative;
     background: url(../Images/bg.png)repeat;
-    overflow: auto ;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    overflow: auto;
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -894,11 +898,11 @@ banner#banner {
     color: #fcf7f3b7;
 }
 
-.teal{
-    background-color: #008073!important;
+.teal {
+    background-color: #008073 !important;
 }
 
-#about{
+#about {
     margin-top: -5em;
 }
 
@@ -907,13 +911,14 @@ banner#banner {
     padding-top: 0;
     position: relative;
 }
+
 .section h3 {
     font-weight: 200;
     margin-bottom: 60px;
     margin-top: 0;
     padding: 30px 40px;
     text-transform: uppercase;
-    font-family: "Roboto",sans-serif;
+    font-family: "Roboto", sans-serif;
 }
 
 .section h3 {
@@ -921,15 +926,14 @@ banner#banner {
     line-height: 3.212rem;
 }
 
-.flow-text{
+.flow-text {
     font-size: 1.5em;
     font-weight: 300;
     text-align: justify;
     text-justify: auto;
 }
 
-#about 
-.container {
+#about .container {
     padding: 0 10.5vw;
     margin: 0 auto;
     max-width: 1280px;
@@ -943,9 +947,139 @@ blockquote {
     font-weight: 400;
     margin: 20px 0;
     padding-left: 1.5rem;
-  }
-  
-  blockquote * {
+}
+
+blockquote * {
     font-size: inherit;
     line-height: inherit;
-  }
+}
+
+.card.medium .card-image {
+    height: 240px;
+}
+
+#skills .col img.responsive-img {
+    margin: 0 auto;
+    max-height: 100px;
+    padding-bottom: 10px;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.card {
+    margin-bottom: 60px;
+}
+
+.card .role {
+    font-size: 1.25rem;
+    position: absolute;
+    right: 38px;
+    top: 35px;
+}
+
+.card li a {
+    margin-right: 0;
+    color: #333;
+    border-bottom: 2px solid #ffab40;
+}
+
+.card li a:hover {
+    color: #333;
+    font-weight: 500;
+}
+
+.card .card-content {
+    padding-bottom: 30px;
+}
+
+.card-action span {
+    font-size: 85%;
+    color: #666;
+}
+
+
+.card .card-title {
+    font-size: 24px;
+}
+
+.card .card-content .card-title {
+    line-height: 2.5rem;
+}
+
+.card i.right {
+    margin-left: 10px;
+}
+
+a.hoverline {
+    border-bottom: 3px solid transparent !important;
+    padding: 3px 3px 0 3px;
+    transition: 0.25s all;
+    -moz-transition: 0.25s all;
+    -webkit-transition: 0.25s all;
+}
+
+a.hoverline:hover {
+    border-bottom: 3px solid #009688 !important;
+}
+
+#skills .card.large {
+    height: 360px;
+}
+
+#skills h4 {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+}
+
+#skills .col img.responsive-img {
+    margin: 0 auto;
+    max-height: 100px;
+    padding-bottom: 10px;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.card.large .card-content p {
+    color: inherit;
+    margin: 0;
+    padding: 30px 0;
+}
+
+#experience .card-content .row {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.card.large .card-image {
+    height: 230px;
+}
+
+.card.large .card-content {
+    height: auto;
+}
+
+.card.medium .card-image {
+    height: 240px;
+}
+
+.card-action a.btn-floating {
+    margin-bottom: 0;
+}
+
+.card-content h4{
+    font-size: 1.7vw;
+}
