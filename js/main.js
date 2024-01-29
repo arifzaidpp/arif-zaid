@@ -73,7 +73,24 @@ $('#closenav').click(function (event) {
 $('#live').click(function () {
   if ($('.live').hasClass('show')) {
     $('.live').removeClass('show');
-  }else{
+  } else {
     $('.live').removeClass('show');
   }
-})
+});
+
+
+
+$(function () {
+  "use strict";
+
+  $(".card-content-img").click(function () {
+    var $src = $(this).attr("src");
+    $(".show").fadeIn();
+    $(".img-show img").attr("src", $src);
+  });
+
+  $("span, .overlay").click(function () {
+    $(".show").fadeOut();
+  });
+
+});
