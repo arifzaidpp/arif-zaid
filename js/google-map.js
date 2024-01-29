@@ -46,7 +46,7 @@ function init() {
     var addresses = ['INDIA'];
 
     for (var x = 0; x < addresses.length; x++) {
-        $.getJSON('https://maps.googleapis.com/maps/api/geocode/json?address='+addresses[x]+'&key=AIzaSyD067GqBUjhhqty7808t6fhsNutBTQMgn4', null, function (data) {
+        $.getJSON('https://maps.googleapis.com/maps/api/geocode/json?address='+addresses[x]+'&key=???', null, function (data) {
             var p = data.results[0].geometry.location
             var latlng = new google.maps.LatLng(11.02672, 76.07065);
             new google.maps.Marker({
