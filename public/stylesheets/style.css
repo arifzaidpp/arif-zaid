@@ -955,11 +955,12 @@ blockquote * {
 }
 
 .card.medium .card-image {
-  height: 240px;
+  height: 200px;
 }
 
 .card.medium{
   margin-left: 1rem;
+  height: 352px;
 }
 
 #skills .col img.responsive-img {
