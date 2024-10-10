@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Banner from "../../components/banner/Banner";
 import About from "../../components/about/About";
+import Projects from "../../components/projects/Projects";
+import Skills from "../../components/skills/Skills";
 
 const Home = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -18,8 +20,14 @@ const Home = () => {
           <Banner />
 
           {/* About Section */}
-          <About/>
+          <About />
 
+          {/* Project Section */}
+          <Projects />
+
+          {/* Skills Section */}
+          <Skills />
+          
           {/* Additional space for better scrolling */}
           <div className="h-20"></div>
         </div>
