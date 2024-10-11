@@ -4,6 +4,7 @@ import Banner from "../../components/banner/Banner";
 import About from "../../components/about/About";
 import Projects from "../../components/projects/Projects";
 import Skills from "../../components/skills/Skills";
+import Certificates from "../../components/certificates/Certificates";
 
 const Home = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -22,11 +23,14 @@ const Home = () => {
           {/* About Section */}
           <About />
 
-          {/* Project Section */}
+          {/* Projects Section */}
           <Projects />
 
           {/* Skills Section */}
           <Skills />
+
+          {/* Certificates Section */}
+          <Certificates />
           
           {/* Additional space for better scrolling */}
           <div className="h-20"></div>
