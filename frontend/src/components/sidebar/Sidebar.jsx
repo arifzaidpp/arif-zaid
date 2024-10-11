@@ -4,7 +4,7 @@ import Menu from "./Menu";
 import { FaBars } from "react-icons/fa"; // Import menu and close icons
 import Footer from "./footer";
 
-const Sidebar = () => {
+const Sidebar = ({ onMenuItemClick }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Function to close the sidebar when clicking outside
@@ -16,7 +16,7 @@ const Sidebar = () => {
     <>
       {/* Sidebar with sliding animation */}
       <div
-        className={`lg:w-[25%] md:w-[30%] sm:w-[35%] xl:w-[22%] 2xl:w-[18%] w-60 md:left-0 md:h-full md:top-0 left-0 h-full top-0 z-30 bg-gray-400 text-white fixed lg:static p-5 transform transition-transform duration-300 ${
+        className={`lg:w-[32%] md:w-[30%] sm:w-[35%] xl:w-[27%] 2xl:w-[22%] w-60 md:left-0 md:h-full md:top-0 left-0 h-full top-0 z-30 bg-gray-400 text-white fixed lg:static p-5 transform transition-transform duration-300 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`} // Hide/show sidebar with sliding effect
       >
@@ -24,7 +24,7 @@ const Sidebar = () => {
           {/* Profile Section */}
           <Profile />
           {/* Menu Section */}
-          <Menu />
+          <Menu onMenuItemClick={onMenuItemClick} /> {/* Pass the scroll function */}
           {/* Footer Section */}
           <Footer />
         </div>
