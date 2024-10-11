@@ -6,6 +6,7 @@ import Projects from "../../components/projects/Projects";
 import Skills from "../../components/skills/Skills";
 import Certificates from "../../components/certificates/Certificates";
 import Education from "../../components/education/Education";
+import Contact from "../../components/contact/Contact";
 
 const Home = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -35,9 +36,11 @@ const Home = () => {
 
           {/* Education Section */}
           <Education />
+
+          {/* Contact Section */}
+          <Contact />
+
           
-          {/* Additional space for better scrolling */}
-          <div className="h-20"></div>
         </div>
       </div>
 

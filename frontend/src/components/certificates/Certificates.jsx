@@ -51,8 +51,9 @@ const Certificates = () => {
     <>
       <SectionHeaders section="Certificates" />
 
+<div className=" bg-[url('./bg.png')]">
       {/* Certificates Gallery */}
-      <div className="columns-1 sm:columns-2 md:columns-3 xl:columns-4 mx-auto mb-10 w-full max-w-[90%] gap-4 space-y-4 py-10">
+      <div className="columns-1 sm:columns-2 md:columns-3 xl:columns-4 mx-auto pb-10 w-full max-w-[90%] gap-4 space-y-4 py-10  ">
         {certificates.map((cert, index) => (
           <div key={index} className="relative mb-4 cursor-pointer overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105" onClick={() => openFullScreen(cert.image)}>
             <img 
@@ -87,6 +88,7 @@ const Certificates = () => {
           </button>
         </div>
       )}
+      </div>
     </>
   );
 };
