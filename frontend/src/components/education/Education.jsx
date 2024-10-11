@@ -45,7 +45,7 @@ const Education = () => {
     return (
         <>
             <SectionHeaders section="Education" />
-            <ul className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical my-20">
+            <ul className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical py-20  bg-[url('./bg.png')]">
                 {educationData.map((edu, index) => (
                     <li key={index}>
                         {/* Remove the first hr for the first item */}
