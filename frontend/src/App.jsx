@@ -1,16 +1,16 @@
-import { useState } from 'react';
+import { BrowserRouter } from "react-router-dom";
+import { RecoilRoot } from "recoil";
+import Router from "./router";
 import './App.css'
-import Home from './pages/home/Home'
-import Login from './pages/login/Login';
 
 function App() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
   return (
-   <>
-   <Login/>
-   </>
-  )
+    <RecoilRoot>
+      <BrowserRouter>
+        <Router />
+      </BrowserRouter>
+    </RecoilRoot>
+  );
 }
 
-export default App
+export default App;

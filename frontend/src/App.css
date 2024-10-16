@@ -8,3 +8,6 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+* {
+    letter-spacing: .25px;
+}
