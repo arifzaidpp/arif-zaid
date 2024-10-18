@@ -2,17 +2,17 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    admissionNumber: {
-      type: String,
-      required: true,
-      unique: true,
-      minlength: 3,
-    },
     username: {
       type: String,
       required: true,
       unique: true,
       minlength: 4,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      minlength: 13,
     },
     password: {
       type: String,
@@ -22,11 +22,6 @@ const userSchema = new mongoose.Schema(
     isAdmin: { 
       type: Boolean, 
       default: false 
-    },
-    gender: {
-      type: String,
-      required: true,
-      enum: ["male", "female"],
     },
     // profilePicture: {
     //   type: String,

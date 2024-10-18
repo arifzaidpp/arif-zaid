@@ -13,8 +13,7 @@ import mongoose from "mongoose";
 
 const connectToMongoDB = async () => {
     try {
-        const dbName = "Admin"; // Replace with your actual database name
-        const mongoUri = `${process.env.MONGO_URI}/${dbName}`;
+        const mongoUri = process.env.MONGO_URI;
         await mongoose.connect(mongoUri);
         console.log("Connected to MongoDB");
     } catch (error) {

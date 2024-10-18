@@ -1,14 +1,12 @@
 import express from "express";
-import { login, logout, signup } from "../controllers/auth.controller.js";
-import { authMiddleware } from "../middleware/authMiddleware.js";
-import { sessionMiddleware } from "../middleware/sessionMiddleware.js";
+import { signin, signout, signup } from "../controllers/auth.controller.js";
 
 const router = express.Router();
 
 router.post("/signup", signup);
 
-router.post("/login", login);
+router.post("/signin", signin);
 
-router.post('/logout', sessionMiddleware, logout);
+router.post('/signout', signout);
 
 export default router;
