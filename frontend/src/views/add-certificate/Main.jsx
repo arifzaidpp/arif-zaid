@@ -1,5 +1,7 @@
 import { Lucide, TomSelect, Tippy, Litepicker } from "@/base-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useUploadImage from "../../hooks/useUploadImage";
+import useDeleteImage from "../../hooks/useDeleteImage";
 
 const Main = () => {
   const [date, setDate] = useState("");
@@ -39,6 +41,9 @@ const Main = () => {
   const [touchedCertificateCategory, setTouchedCertificateCategory] = useState(false);
   const [touchedCertificateImage, setTouchedCertificateImage] = useState(false);
 
+  const { uploadImage, loading, error, data, publicId } = useUploadImage();
+  const { deleteImage, deleteLoading, deleteError } = useDeleteImage();
+
   const maxCharacters = 100;
 
   // Validation functions
@@ -57,33 +62,40 @@ const Main = () => {
   };
 
   // Handlers for file upload
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      setImagePreview(URL.createObjectURL(file));
       setImageName(file.name);
       setIsCertificateImageValid(true);
+
+      // Upload image and set the preview when the upload is complete
+      await uploadImage(file);
     }
   };
 
-  const handleRemoveImage = () => {
-    setImagePreview(null);
-    setImageName("");
-    setTouchedCertificateImage(true);
-    setIsCertificateImageValid(false); // Mark as invalid if image removed
+  const handleRemoveImage = async () => {
+    if (publicId) {
+      await deleteImage(publicId); // Call deleteImage with the public ID
+      setImagePreview(null); // Remove the image preview
+      setImageName("");
+      setTouchedCertificateImage(true);
+      setIsCertificateImageValid(false); // Mark as invalid if image removed
+    }
   };
 
   const handleDragOver = (event) => {
     event.preventDefault();
   };
 
-  const handleDrop = (event) => {
+  const handleDrop = async (event) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     if (file) {
-      setImagePreview(URL.createObjectURL(file));
       setImageName(file.name);
       setIsCertificateImageValid(true);
+
+      // Upload image and set the preview when the upload is complete
+      await uploadImage(file);
     }
   };
 
@@ -110,39 +122,46 @@ const Main = () => {
     const isValid = isCertificateNameValid() && isCertificateCategoryValid() && isCertificateImageValid;
 
     if (!isValid) {
-        console.log('Please fill out all required fields.');
+      console.log('Please fill out all required fields.');
 
-        // Set touched states to trigger error messages
-        setTouchedCertificateName(true);
-        setTouchedCertificateCategory(true);
-        setTouchedCertificateImage(true);
+      // Set touched states to trigger error messages
+      setTouchedCertificateName(true);
+      setTouchedCertificateCategory(true);
+      setTouchedCertificateImage(true);
 
-        // Check if the image is not uploaded
-        if (!imagePreview) {
-            setIsCertificateImageValid(false);
-        }
+      // Check if the image is not uploaded
+      if (!imagePreview) {
+        setIsCertificateImageValid(false);
+      }
 
-        // Ensure both sections are open to display the errors
-        setIsCertificateInfoOpen(true);
-        setIsCertificateImageOpen(true);
+      // Ensure both sections are open to display the errors
+      setIsCertificateInfoOpen(true);
+      setIsCertificateImageOpen(true);
     } else {
-        // If validation is successful, proceed with adding the certificate
-        setIsCertificateInfoOpen(true);
-        setIsCertificateImageOpen(true);
+      // If validation is successful, proceed with adding the certificate
+      setIsCertificateInfoOpen(true);
+      setIsCertificateImageOpen(true);
 
-        console.log('Certificate added successfully!', {
-            imageName,
-            certificateName,
-            category,
-            date // Include the selected date
-        });
+      console.log('Certificate added successfully!', {
+        imageName,
+        certificateName,
+        category,
+        date // Include the selected date
+      });
 
-        // Logic to add the certificate
-        // Your certificate addition logic goes here
+      // Logic to add the certificate
+      // Your certificate addition logic goes here
     }
-};
+  };
 
 
+  // Use useEffect to log data when it updates and set the image preview
+  useEffect(() => {
+    if (data) {
+      console.log('Upload successful:', data); // Log when data updates
+      setImagePreview(data); // Set the preview when data is available
+    }
+  }, [data]); // Runs whenever 'data' changes
 
 
   return (
@@ -201,20 +220,28 @@ const Main = () => {
                         }`}
                     >
                       <div className="flex justify-center items-center h-28 relative">
-                        {imagePreview ? (
+                        {loading || deleteLoading ? (
+                          // Show loading spinner when loading is true
+                          <div className="relative h-28 w-auto flex justify-center items-center">
+                            <Lucide className="animate-spin w-8 h-8 text-primary" icon="Loader" />
+                          </div>
+                        ) : imagePreview ? (
                           <div className="relative h-28 w-auto">
                             <img
                               className="rounded-md max-h-full max-w-full object-contain"
                               alt="Uploaded Preview"
                               src={imagePreview}
                             />
-                            <Tippy
-                              content="Remove this image?"
-                              className="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2 cursor-pointer"
-                              onClick={handleRemoveImage}
-                            >
-                              <Lucide icon="X" className="w-4 h-4" />
-                            </Tippy>
+                            {/* Show Remove icon only when image is uploaded and loading is false */}
+                            {data && !loading && (
+                              <Tippy
+                                content="Remove this image?"
+                                className="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2 cursor-pointer"
+                                onClick={handleRemoveImage}
+                              >
+                                <Lucide icon="X" className="w-4 h-4" />
+                              </Tippy>
+                            )}
                           </div>
                         ) : (
                           <div className="relative h-28 w-32 flex flex-col justify-center items-center">
@@ -257,6 +284,7 @@ const Main = () => {
             </div>
           </div>
           {/* END: Certificate Image Upload */}
+
 
           {/* BEGIN: Certificate Information */}
           <div className="intro-y box p-5 mt-5">
