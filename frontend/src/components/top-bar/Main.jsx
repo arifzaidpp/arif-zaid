@@ -14,9 +14,16 @@ import * as $_ from "lodash";
 import classnames from "classnames";
 import { useNavigate } from 'react-router-dom';
 import Profile from "@/assets/ArifZaid-Profile.jpeg"
+import useLogout from "../../hooks/useLogout";
 
 function Main(props) {
   const [searchDropdown, setSearchDropdown] = useState(false);
+  const { logout, loading, error } = useLogout(); // Destructure the logout hook
+
+  const handleLogout = () => {
+    logout(); // Call the logout function when button is clicked
+  };
+
   const showSearchDropdown = () => {
     setSearchDropdown(true);
   };
@@ -207,27 +214,41 @@ function Main(props) {
           <DropdownMenu className="w-56">
             <DropdownContent className="bg-primary text-white">
               <DropdownHeader tag="div" className="!font-normal">
-                  <div className="font-medium">Arif Zaid P P</div>
-                  <div className="text-xs text-white/70 mt-0.5 dark:text-slate-500">
-                    MERN stack developer
-                  </div>
+                <div className="font-medium">Arif Zaid P P</div>
+                <div className="text-xs text-white/70 mt-0.5 dark:text-slate-500">
+                  MERN stack developer
+                </div>
               </DropdownHeader>
               <DropdownDivider className="border-white/[0.08]" />
               <DropdownItem className="hover:bg-white/5" onClick={handleNavigationProfile}>
-                  <Lucide icon="User" className="w-4 h-4 mr-2" /> Profile
+                <Lucide icon="User" className="w-4 h-4 mr-2" /> Profile
               </DropdownItem>
               <DropdownItem className="hover:bg-white/5" onClick={handleNavigationProfile}>
-                  <Lucide icon="Edit" className="w-4 h-4 mr-2" /> Edit Account
+                <Lucide icon="Edit" className="w-4 h-4 mr-2" /> Edit Account
               </DropdownItem>
               <DropdownItem className="hover:bg-white/5" onClick={handleNavigationPassword}>
-                  <Lucide icon="Lock" className="w-4 h-4 mr-2" /> Reset Password
+                <Lucide icon="Lock" className="w-4 h-4 mr-2" /> Reset Password
               </DropdownItem>
               <DropdownItem className="hover:bg-white/5">
                 <Lucide icon="HelpCircle" className="w-4 h-4 mr-2" /> Help
               </DropdownItem>
               <DropdownDivider className="border-white/[0.08]" />
-              <DropdownItem className="hover:bg-white/5">
-                <Lucide icon="ToggleRight" className="w-4 h-4 mr-2" /> Logout
+              <DropdownItem className="hover:bg-white/5" onClick={handleLogout}>
+                {/* If loading is true, show spinning Loader icon and 'Logging out...' text, otherwise show ToggleRight icon and 'Logout' text */}
+                {loading ? (
+                  <>
+                    <Lucide className="animate-spin w-5 h-5 text-current" icon="Loader" />
+                    Logging out...
+                  </>
+                ) : (
+                  <>
+                    <Lucide icon="ToggleRight" className="w-4 h-4 mr-2" />
+                    Logout
+                  </>
+                )}
+
+                {/* If there's an error, display it in red */}
+                {error && <span className="text-red-500">{error}</span>}
               </DropdownItem>
             </DropdownContent>
           </DropdownMenu>

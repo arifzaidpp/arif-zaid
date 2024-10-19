@@ -49,15 +49,22 @@ export const signup = async (req, res) => {
 // Login Controller (Handles both User and Admin)
 export const signin = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { usernameOrEmail, password } = req.body;
 
     // Validate required fields
-    if (!username || !password) {
+    if (!usernameOrEmail || !password) {
       return res.status(400).json({ error: "Please fill all the required fields" });
     }
 
+    // Determine if the input is an email or username
+    const isEmail = usernameOrEmail.includes('@gmail.com');
+    
+    // Find the user either by email or username
+    const user = isEmail
+      ? await User.findOne({ email: usernameOrEmail })
+      : await User.findOne({ username: usernameOrEmail });
+    
     // Check if the user exists
-    const user = await User.findOne({ username });
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     // Check password validity
@@ -80,6 +87,7 @@ export const signin = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 
 
 // Logout Controller (Handles both User and Admin)
