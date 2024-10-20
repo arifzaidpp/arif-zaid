@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Profile from "./Profile";
 import Menu from "./Menu";
 import { FaBars } from "react-icons/fa"; // Import menu and close icons
-import Footer from "./footer";
+import Footer from "./Footer";
 
 const Sidebar = ({ onMenuItemClick }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
