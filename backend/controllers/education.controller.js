@@ -36,14 +36,12 @@ export const getAllEducations = async (req, res) => {
 
 // Edit an existing education
 export const editEducation = async (req, res) => {
-    console.log(req.body);
     
     const { id } = req.params;
     const { education, institution, year, status } = req.body;
 
     // Check if required fields are provided
     if (!education || !institution || !year ) {
-        console.log("success ");
         return res.status(400).json({ error: 'All required fields must be filled' });
     }
 

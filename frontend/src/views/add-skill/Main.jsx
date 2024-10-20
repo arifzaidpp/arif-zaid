@@ -13,7 +13,6 @@ const Main = () => {
   const location = useLocation();
   const existingSkill = location.state?.skill;
 
-  console.log(existingSkill);
   // State variables
   const [isSkillImageOpen, setIsSkillImageOpen] = useState(true);
   const [isSkillInfoOpen, setIsSkillInfoOpen] = useState(false);
@@ -42,9 +41,8 @@ const Main = () => {
     // Extract public_id
     publicIdEdit = extractPublicId(imageUrl);
 
-    console.log(publicIdEdit);  // This will run only if existingSkill has a value
   } else {
-    console.log("No existing skill or image found.");
+    toast.error("No existing skill or image found.");
   }
 
 
@@ -170,7 +168,7 @@ const Main = () => {
     const isValid = isSkillNameValid() && isSkillCategoryValid() && isSkillSectionValid() && isSkillImageValid;
 
     if (!isValid) {
-      console.log('Please fill out all required fields.');
+      toast.error('Please fill out all required fields.');
 
       // Set touched states to trigger error messages
       setTouchedSkillName(true);

@@ -11,7 +11,6 @@ const Main = () => {
   const location = useLocation();
   const existingEducation = location.state?.education;
 
-  console.log(existingEducation);
   // State variables
   const [educationName, setEducationName] = useState(existingEducation?.name || '');
   const [touchedEducationName, setTouchedEducationName] = useState(false);
@@ -49,7 +48,7 @@ const Main = () => {
     const isValid = isEducationNameValid() && isEducationInstitutionValid() && isEducationYearValid();
 
     if (!isValid) {
-      console.log('Please fill out all required fields.');
+      toast.error('Please fill out all required fields.');
 
       // Set touched states to trigger error messages
       setTouchedEducationName(true);
@@ -63,7 +62,7 @@ const Main = () => {
         education: educationName,
         institution: educationInstitution,
         year: educationYear,
-        status: educationStatus,
+        status: educationStatus ? educationStatus : false,
       };
       
 

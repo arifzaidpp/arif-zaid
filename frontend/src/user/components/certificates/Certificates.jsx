@@ -1,43 +1,13 @@
 import React, { useState } from 'react';
 import SectionHeaders from '../sectionHeaders/SectionHeaders';
 import { AiOutlineClose } from 'react-icons/ai';
+import useGetAllCertificates from '../../../hooks/certificate/useGetAllCertificate';
 
 const Certificates = () => {
   const [selectedImage, setSelectedImage] = useState(null); // For full-screen image display
 
-  const certificates = [
-    {
-      title: 'MERN Stack Development',
-      category: 'Web Development',
-      date: '2023-01-15',
-      image: './src/assets/Certificate/Arif_415163_page-0001.jpg',
-    },
-    {
-      title: 'JavaScript Mastery',
-      category: 'Programming',
-      date: '2022-06-10', 
-      image: './src/assets/Certificate/Certificate for ARIF ZAID PP for _Feedback Form National Leve..._.png',
-    },
-    {
-      title: 'React Advanced',
-      category: 'Web Development',
-      date: '2023-03-22', 
-      image: './src/assets/Certificate/certificatecssyouaccel_pages-to-jpg-0001.jpg',
-    },
-    {
-      title: 'CSS for Beginners',
-      category: 'Web Development',
-      date: '2022-12-05', 
-      image: './src/assets/Certificate/cssforbeginners_pages-to-jpg-0001.jpg',
-    },
-    {
-      title: 'Advanced CSS',
-      category: 'Web Development',
-      date: '2023-02-18',
-      image: './src/assets/Certificate/certificatecssyouaccel_pages-to-jpg-0001.jpg',
-    },
-    // Additional certificates can be added here...
-  ];
+  // Get all certificates from the API
+  const { certificates, loading, error } = useGetAllCertificates();
 
   const openFullScreen = (image) => {
     setSelectedImage(image);
@@ -63,9 +33,9 @@ const Certificates = () => {
             />
             <div className="absolute inset-0 bg-black bg-opacity-50 rounded-md flex items-center justify-center text-white opacity-0 hover:opacity-100 transition-opacity duration-300">
               <div className="text-center p-2">
-                <h3 className="font-bold text-lg">{cert.title}</h3>
+                <h3 className="font-bold text-lg">{cert.name}</h3>
                 <p className="text-sm">{cert.category}</p>
-                <p className="text-sm">{cert.date}</p>
+                <p className="text-sm">{new Date(cert.date).toLocaleDateString('en-CA')}</p>
               </div>
             </div>
           </div>

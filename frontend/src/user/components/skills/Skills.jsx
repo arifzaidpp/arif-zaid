@@ -5,109 +5,55 @@ import useGetAllSkills from "../../../hooks/skill/useGetAllSkills";
 const Skills = () => {
   // Get all skills from the API
   const { skills, loading, error } = useGetAllSkills();
-  const skillsData = [
-    {
-      section: "Frontend Technologies",
-      categories: [
-        {
-          category: "Markup Languages",
-          skills: [
-            { name: "HTML5", icon: "./src/assets/skills/html5.png" },
-            { name: "JSX", icon: "./src/assets/skills/jsx.png" },
-            { name: "HAML", icon: "./src/assets/skills/haml.png" },
-            { name: "Jade", icon: "./src/assets/skills/jade.png" },
-            { name: "Jekyll", icon: "./src/assets/skills/jekyll.png" },
+
+  const rearrangeSkillsData = (skills) => {
+    const skillsData = [];
+  
+    skills.forEach((skill) => {
+      const sectionIndex = skillsData.findIndex(
+        (s) => s.section === skill.section
+      );
+  
+      if (sectionIndex === -1) {
+        // If the section does not exist, create a new one
+        skillsData.push({
+          section: skill.section,
+          categories: [
+            {
+              category: skill.category,
+              skills: [
+                { name: skill.name, icon: skill.image }, // Use the image URL as the icon
+              ],
+            },
           ],
-        },
-        {
-          category: "Stylesheets",
-          skills: [
-            { name: "CSS", icon: "./src/assets/skills/css.png" },
-            { name: "CSS3", icon: "./src/assets/skills/css3.png" },
-            { name: "SASS", icon: "./src/assets/skills/sass.png" },
-            { name: "Bootstrap", icon: "./src/assets/skills/bootstrap.png" },
-            { name: "Foundation", icon: "./src/assets/skills/foundation.png" },
-            { name: "Materialize", icon: "./src/assets/skills/materialize.png" },
-          ],
-        },
-        {
-          category: "JavaScript Libraries/Frameworks",
-          skills: [
-            { name: "JavaScript", icon: "./src/assets/skills/javascript.png" },
-            { name: "React", icon: "./src/assets/skills/react.png" },
-            { name: "jQuery", icon: "./src/assets/skills/jquery.png" },
-            { name: "Angular", icon: "./src/assets/skills/angular.png" },
-            { name: "Ionic", icon: "./src/assets/skills/ionic.png" },
-          ],
-        },
-      ],
-    },
-    {
-      section: "Backend Technologies",
-      categories: [
-        {
-          category: "Languages and Frameworks",
-          skills: [
-            { name: "Node.js", icon: "./src/assets/skills/node.png" },
-            { name: "Ruby", icon: "./src/assets/skills/ruby.png" },
-            { name: "Rails", icon: "./src/assets/skills/rails.png" },
-          ],
-        },
-        {
-          category: "Testing Frameworks",
-          skills: [{ name: "Minitest", icon: "./src/assets/skills/minitest.png" }],
-        },
-        {
-          category: "Databases",
-          skills: [
-            { name: "PostgreSQL", icon: "./src/assets/skills/postgresql.png" },
-            { name: "MongoDB", icon: "./src/assets/skills/mongodb.png" },
-          ],
-        },
-      ],
-    },
-    {
-      section: "Build Tools",
-      categories: [
-        {
-          category: "Build Tools",
-          skills: [
-            { name: "Webpack", icon: "./src/assets/skills/webpack.png" },
-            { name: "Gulp", icon: "./src/assets/skills/gulp.png" },
-            { name: "Grunt", icon: "./src/assets/skills/grunt.png" },
-            { name: "Bower", icon: "./src/assets/skills/bower.png" },
-          ],
-        },
-      ],
-    },
-    {
-      section: "Content Management Systems (CMS)",
-      categories: [
-        {
-          category: "CMS",
-          skills: [
-            { name: "WordPress", icon: "./src/assets/skills/wordpress.png" },
-            { name: "Tumblr", icon: "./src/assets/skills/tumblr.png" },
-            { name: "Squarespace", icon: "./src/assets/skills/squarespace.png" },
-          ],
-        },
-      ],
-    },
-    {
-      section: "Other Tools",
-      categories: [
-        {
-          category: "Other Tools",
-          skills: [
-            { name: "GitHub", icon: "./src/assets/skills/github.png" },
-            { name: "Heroku", icon: "./src/assets/skills/heroku.png" },
-            { name: "Photoshop", icon: "./src/assets/skills/photoshop.png" },
-            { name: "Final Cut Pro", icon: "./src/assets/skills/finalcutpro.png" },
-          ],
-        },
-      ],
-    },
-  ];
+        });
+      } else {
+        // If the section exists, find or add the category
+        const categoryIndex = skillsData[sectionIndex].categories.findIndex(
+          (c) => c.category === skill.category
+        );
+  
+        if (categoryIndex === -1) {
+          // If the category does not exist, create a new one
+          skillsData[sectionIndex].categories.push({
+            category: skill.category,
+            skills: [{ name: skill.name, icon: skill.image }],
+          });
+        } else {
+          // If the category exists, add the skill to the category
+          skillsData[sectionIndex].categories[categoryIndex].skills.push({
+            name: skill.name,
+            icon: skill.image,
+          });
+        }
+      }
+    });
+  
+    return skillsData;
+  };
+  
+  // Example usage:=
+    const skillsData = rearrangeSkillsData(skills);
 
   return (
     <>
@@ -121,7 +67,7 @@ const Skills = () => {
 
             {techSection.categories.map((category, idx) => (
               <div key={idx} className="w-full bg-white rounded-lg shadow-lg p-6 mb-8">
-                <h4 className="text-xl md:text-2xl text-yellow-950 font-semibold mb-4">
+                <h4 className="text-xl md:text-2xl text-yellow-950 font-medium mb-4">
                   {category.category}
                 </h4>
                 <hr className="border-t border-gray-400 my-4 w-[99%] relative mx-auto" />
@@ -134,7 +80,7 @@ const Skills = () => {
                       <img
                         src={skill.icon}
                         alt={skill.name}
-                        className="w-12 h-12 mb-2"
+                        className="max-w-16 w-auto h-12 mb-2"
                       />
                       <p className="text-sm sm:text-base md:text-lg xl:text-xl text-gray-700 font-medium">
                         {skill.name}
