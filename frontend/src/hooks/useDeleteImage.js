@@ -21,7 +21,6 @@ const useDeleteImage = () => {
                 throw new Error('Failed to delete image');
             }
 
-            console.log('Image deleted successfully');
         } catch (err) {
             console.error('Error deleting image:', err.message);
             setDeleteError(err.message);

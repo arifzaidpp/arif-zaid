@@ -20,7 +20,7 @@ const sideMenu = atom({
           },
           {
             icon: "",
-            pathname: "/admin/edit-projects",
+            pathname: "/admin/projects",
             title: "Edit Projects",
           },
         ],
@@ -36,7 +36,7 @@ const sideMenu = atom({
           },
           {
             icon: "",
-            pathname: "/admin/edit-skills",
+            pathname: "/admin/skills",
             title: "Edit Skills",
           },
         ],
@@ -52,7 +52,7 @@ const sideMenu = atom({
           },
           {
             icon: "",
-            pathname: "/admin/edit-certificates",
+            pathname: "/admin/certificates",
             title: "Edit Certificates",
           },
         ],
@@ -68,7 +68,7 @@ const sideMenu = atom({
           },
           {
             icon: "",
-            pathname: "/admin/edit-educations",
+            pathname: "/admin/educations",
             title: "Edit Educations",
           },
         ],

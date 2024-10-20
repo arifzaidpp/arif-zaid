@@ -257,6 +257,9 @@ function Main() {
                         getRef={(el) => {
                           successNotification.current = el;
                         }}
+                        options={{
+                          duration: 3000,
+                        }}
                         className="flex"
                       >
                         <Lucide icon="CheckCircle" className="text-success" />

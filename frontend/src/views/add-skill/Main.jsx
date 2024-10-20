@@ -1,11 +1,16 @@
 import { Lucide, TomSelect, Tippy } from "@/base-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useUploadImage from "../../hooks/useUploadImage";
+import useDeleteImage from "../../hooks/useDeleteImage";
 
 const Main = () => {
   // State variables
   const [isSkillImageOpen, setIsSkillImageOpen] = useState(true);
   const [isSkillInfoOpen, setIsSkillInfoOpen] = useState(false);
   const [isSkillImageValid, setIsSkillImageValid] = useState(true);
+
+  const { uploadImage, loading, error, data, publicId } = useUploadImage();
+  const { deleteImage, deleteLoading, deleteError } = useDeleteImage();
 
   const [imagePreview, setImagePreview] = useState(null);
   const [imageName, setImageName] = useState("");
@@ -52,33 +57,38 @@ const Main = () => {
   };
 
   // Handlers for file upload
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      setImagePreview(URL.createObjectURL(file));
       setImageName(file.name);
       setIsSkillImageValid(true);
+
+      await uploadImage(file);
     }
   };
 
-  const handleRemoveImage = () => {
-    setImagePreview(null);
-    setImageName("");
-    setTouchedSkillImage(true);
-    setIsSkillImageValid(false); // Mark as invalid if image removed
+  const handleRemoveImage = async () => {
+    if (publicId) {
+      await deleteImage(publicId);
+      setImagePreview(null);
+      setImageName("");
+      setTouchedSkillImage(true);
+      setIsSkillImageValid(false); // Mark as invalid if image removed
+    }
   };
 
   const handleDragOver = (event) => {
     event.preventDefault();
   };
 
-  const handleDrop = (event) => {
+  const handleDrop = async (event) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     if (file) {
-      setImagePreview(URL.createObjectURL(file));
       setImageName(file.name);
       setIsSkillImageValid(true);
+
+      await uploadImage(file);
     }
   };
 
@@ -137,13 +147,22 @@ const Main = () => {
       setIsSkillImageOpen(true);
 
 
-      console.log('Skill added successfully!' + imageName, skillName , section, category);
+      console.log('Skill added successfully!' + imageName, skillName, section, category);
 
 
       // Logic to add the skill
       // Your skill addition logic goes here
     }
   };
+
+
+  // Use useEffect to log data when it updates and set the image preview
+  useEffect(() => {
+    if (data) {
+      console.log('Upload successful:', data); // Log when data updates
+      setImagePreview(data); // Set the preview when data is available
+    }
+  }, [data]); // Runs whenever 'data' changes
 
 
 
@@ -203,20 +222,28 @@ const Main = () => {
                         }`}
                     >
                       <div className="flex justify-center items-center h-28 relative">
-                        {imagePreview ? (
+                        {loading || deleteLoading ? (
+                          // Show loading spinner when loading is true
+                          <div className="relative h-28 w-auto flex justify-center items-center">
+                            <Lucide className="animate-spin w-8 h-8 text-primary" icon="Loader" />
+                          </div>
+                        ) : imagePreview ? (
                           <div className="relative h-28 w-auto">
                             <img
                               className="rounded-md max-h-full max-w-full object-contain"
                               alt="Uploaded Preview"
                               src={imagePreview}
                             />
-                            <Tippy
-                              content="Remove this image?"
-                              className="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2 cursor-pointer"
-                              onClick={handleRemoveImage}
-                            >
-                              <Lucide icon="X" className="w-4 h-4" />
-                            </Tippy>
+                            {/* Show Remove icon only when image is uploaded and loading is false */}
+                            {data && !loading && (
+                              <Tippy
+                                content="Remove this image?"
+                                className="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2 cursor-pointer"
+                                onClick={handleRemoveImage}
+                              >
+                                <Lucide icon="X" className="w-4 h-4" />
+                              </Tippy>
+                            )}
                           </div>
                         ) : (
                           <div className="relative h-28 w-32 flex flex-col justify-center items-center">

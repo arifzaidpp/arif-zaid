@@ -3,21 +3,63 @@ import {
   Tippy,
   TomSelect,
 } from "@/base-components";
-import { set } from "lodash";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useUploadImage from "../../hooks/useUploadImage";
+import useDeleteImage from "../../hooks/useDeleteImage";
+import useAddProject from "../../hooks/useAddProject";
+import useEditProject from "../../hooks/useEditProject";
+
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import toast from "react-hot-toast";
 
 function Main() {
+  const location = useLocation(); // Access location state to get project data for update
+  const existingProject = location.state?.project; // Check if a project is passed for editing
+
+  console.log(existingProject);
+  
+
   // State variables for form fields
-  const [projectName, setProjectName] = useState("");
-  const [imageName, setImageName] = useState("");
-  const [imagePreview, setImagePreview] = useState("");
-  const [projectDescription, setProjectDescription] = useState("");
-  const [projectLink, setProjectLink] = useState(""); // Optional
-  const [githubLink, setGithubLink] = useState("");
-  const [category, setCategory] = useState([]);
-  const [language, setLanguage] = useState([]);
-  const [feature, setFeature] = useState([]);
-  const [projectStatus, setProjectStatus] = useState(false); // Default to false
+  const [projectName, setProjectName] = useState(existingProject?.name || "");
+  const [imageName, setImageName] = useState(existingProject?.image || "");
+  const [imagePreview, setImagePreview] = useState(existingProject?.image || "");
+  const [projectDescription, setProjectDescription] = useState(existingProject?.description || "");
+  const [projectLink, setProjectLink] = useState(existingProject?.live || ""); // Optional
+  const [githubLink, setGithubLink] = useState(existingProject?.github || "");
+  const [category, setCategory] = useState(existingProject?.languages || []);
+  const [language, setLanguage] = useState(existingProject?.languages || []);
+  const [feature, setFeature] = useState(existingProject?.features || []);
+  const [projectStatus, setProjectStatus] = useState(existingProject?.status || false); // Default to false
+
+  const { addProject, loadingAdd, errorAdd } = useAddProject();
+  const { editProject, loadingEdit, errorEdit } = useEditProject();
+  const { uploadImage, loading, error, data, publicId } = useUploadImage();
+  const { deleteImage, deleteLoading, deleteError } = useDeleteImage();
+  // State variables for form fields
+
+  const extractPublicId = (imageUrl) => {
+    // Regex to match everything after 'upload/' until the file extension
+    const regex = /upload\/(?:[^\/]+\/)?([^\.]+)/;
+    const match = imageUrl.match(regex);
+
+    // If there's a match, return the captured group (the public_id), else return null
+    return match ? match[1] : null;
+};
+var publicIdEdit = null;
+
+
+// Check if existingProject and its image exist
+if (existingProject?.image) {
+    const imageUrl = existingProject.image;
+
+    // Extract public_id
+   publicIdEdit = extractPublicId(imageUrl);
+    
+    console.log(publicIdEdit);  // This will run only if existingProject has a value
+} else {
+    console.log("No existing project or image found.");
+}
+
 
   // Validation states
   const [isProjectImageValid, setIsProjectImageValid] = useState(true);
@@ -28,6 +70,20 @@ function Main() {
   const isProjectLanguageValid = () => language.length >= 2;
   const isProjectFeatureValid = () => feature.length >= 1;
   const [isProjectLinkValid, setIsProjectLinkValid] = useState(true);
+
+  useEffect(() => {
+    if (existingProject) {
+      // Pre-fill the form with project data if available
+      setProjectName(existingProject.name);
+      setProjectDescription(existingProject.description);
+      setProjectLink(existingProject.live || "");
+      setGithubLink(existingProject.github);
+      setCategory(existingProject.category || []);
+      setLanguage(existingProject.languages || []);
+      setFeature(existingProject.features || []);
+      setProjectStatus(existingProject.status || false);
+    }
+  }, [existingProject]);
 
   // Touched states
   const [touchedProjectName, setTouchedProjectName] = useState(false);
@@ -94,9 +150,30 @@ function Main() {
 
   const [categories, setCategories] = useState([
     { label: '', value: '' },
+    { value: "MERN Stack", label: "MERN Stack" },
+    { value: "MEAN Stack", label: "MEAN Stack" },
+    { value: "MEVN Stack", label: "MEVN Stack" },
+    { value: "LAMP Stack", label: "LAMP Stack" },
+    { value: "Laravel", label: "Laravel" },
+    { value: "Django", label: "Django" },
+    { value: "Flask", label: "Flask" },
+    { value: "Spring Boot", label: "Spring Boot" },
+    { value: "ASP.NET", label: "ASP.NET" },
+    { value: "Ruby on Rails", label: "Ruby on Rails" },
     { value: "web-development", label: "Web Development" },
     { value: "data-science", label: "Data Science" },
     { value: "mobile-apps", label: "Mobile Apps" },
+    { value: "desktop-apps", label: "Desktop Apps" },
+    { value: "machine-learning", label: "Machine Learning" },
+    { value: "artificial-intelligence", label: "Artificial Intelligence" },
+    { value: "blockchain", label: "Blockchain" },
+    { value: "cloud-computing", label: "Cloud Computing" },
+    { value: "devops", label: "DevOps" },
+    { value: "cybersecurity", label: "Cybersecurity" },
+    { value: "iot", label: "Internet of Things" },
+    { value: "robotics", label: "Robotics" },
+    { value: "game-development", label: "Game Development" },
+    { value: "other", label: "Other" },
   ]);
 
   const [languages, setLanguages] = useState([
@@ -179,34 +256,43 @@ function Main() {
     e.preventDefault();
   };
 
-  const handleDrop = (event) => {
+  const handleDrop = async (event) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     if (file) {
-      setImagePreview(URL.createObjectURL(file));
       setImageName(file.name);
       setIsProjectImageValid(true);
+
+      await uploadImage(file);
     }
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      setImagePreview(URL.createObjectURL(file));
       setImageName(file.name);
       setIsProjectImageValid(true);
+      await uploadImage(file);
     }
   };
 
-  const handleRemoveImage = () => {
-    setImagePreview(null);
-    setImageName("");
-    setTouchedProjectImage(true);
-    setIsProjectImageValid(false); // Mark as invalid if image removed
+  const handleRemoveImage = async () => {
+    console.log("Removing image...");
+    
+    if (publicId || publicIdEdit) {
+      await deleteImage(publicId || publicIdEdit);
+      setImagePreview(null);
+      setImageName("");
+      setTouchedProjectImage(true);
+      setIsProjectImageValid(false); 
+    }
   };
 
   // Category selection
   const handleCategoryChange = (value) => {
+    if (existingProject?.category) {
+      setCategory(existingProject.category);
+    }
     setCategory(value);
     setTouchedProjectCategory(true);
   };
@@ -272,7 +358,10 @@ function Main() {
     const isValid = urlPattern.test(url);
     
     // Set the state based on the validation result
-    setIsProjectLinkValid(isValid);
+    if (projectStatus) {
+        setIsProjectLinkValid(isValid);
+      
+    }
     
     return isValid;
 };
@@ -286,54 +375,81 @@ function Main() {
     return githubRepoPattern.test(url);
   };
 
-  const handleAddProject = () => {
 
-    const isValid = isProjectNameValid() && isProjectImageValid && isProjectDescriptionValid && isProjectCategoryValid() && isProjectLanguageValid() && isProjectFeatureValid() && isGithubValid() && isProjectLinkValid;
+const handleAddOrUpdateProject = async (e) => {
+  e.preventDefault();
 
-    if (!isValid) {
-      console.log('Please fill out all required fields.');
+  const isValid = isProjectNameValid() && isProjectImageValid && isProjectDescriptionValid() && isProjectCategoryValid() && isProjectLanguageValid() && isProjectFeatureValid() && isGithubValid() && isProjectLinkValid;
 
-      // Set touched states to trigger error messages
-      setTouchedProjectName(true);
-      setTouchedProjectImage(true);
-      setTouchedProjectDescription(true);
-      setTouchedProjectCategory(true);
-      setTouchedProjectLanguage(true);
-      setTouchedProjectFeature(true);
-      setTouchedGithub(true);
+  if (!isValid) {
+    // Set touched states to trigger error messages
+    setTouchedProjectName(true);
+    setTouchedProjectImage(true);
+    setTouchedProjectDescription(true);
+    setTouchedProjectCategory(true);
+    setTouchedProjectLanguage(true);
+    setTouchedProjectFeature(true);
+    setTouchedGithub(true);
 
-      // Check if the image is not uploaded
-      if (!imagePreview) {
-        setIsProjectImageValid(false);
-      }
+    if (!imagePreview) {
+      setIsProjectImageValid(false);
+  }
 
-      // Ensure all sections are open to display the errors
-      setIsProjectImageOpen(true);
-      setIsProjectInfoOpen(true);
-      setIsProjectDetailsOpen(true);
-      setIsProjectLanFeOpen(true);
-      setIsProjectManagementOpen(true);
-    } else {
-      // If validation is successful, proceed with adding the project
-      setIsProjectImageOpen(true);
-      setIsProjectInfoOpen(true);
-      setIsProjectDetailsOpen(true);
-      setIsProjectLanFeOpen(true);
-      setIsProjectManagementOpen(true);
-
-      console.log('Project added:', {
-        projectName,
-        projectDescription,
-        category,
-        language,
-        feature,
-        projectStatus,
-        projectLink,
-        githubLink,
-      });
+    // Ensure all sections are open to display the errors
+    setIsProjectImageOpen(true);
+    setIsProjectInfoOpen(true);
+    setIsProjectDetailsOpen(true);
+    setIsProjectLanFeOpen(true);
+    setIsProjectManagementOpen(true);
+  } else {
+    const projectData = {
+      image: imagePreview,
+      name: projectName,
+      description: projectDescription,
+      category,
+      languages: language,
+      features: feature,
+      status: projectStatus,
+      live: projectLink,
+      github: githubLink,
     };
 
-  };
+    try {
+      if (existingProject) {
+        // Update project if editing
+        await editProject(existingProject._id, projectData);
+        console.log('Project updated successfully');
+      } else {
+        // Add new project
+        const result = await addProject(projectData);
+        if (result) {
+          window.location.reload(); // Refresh page on success
+        }
+      }
+    } catch (error) {
+      console.error('Error submitting project:', error);
+    }
+  }
+};
+
+useEffect(() => {
+  if (data) {
+    if (imagePreview) {
+      setImagePreview(null); // Clear the preview when new image is uploaded
+      setImagePreview(data)
+      existingProject.image = null;
+    }
+    setImagePreview(data); // Set the preview when data is available
+  }
+}, [data]);
+
+useEffect(() => {
+  const projectUpdated = sessionStorage.getItem('projectUpdated');
+  if (projectUpdated) {
+    toast.success("Project updated successfully");
+    sessionStorage.removeItem('projectUpdated'); // Clean up flag
+  }
+}, []);
 
   return (
     <>
@@ -404,20 +520,28 @@ function Main() {
                         }`}
                     >
                       <div className="flex justify-center items-center h-28 relative">
-                        {imagePreview ? (
+                      {loading || deleteLoading ? (
+                          // Show loading spinner when loading is true
+                          <div className="relative h-28 w-auto flex justify-center items-center">
+                            <Lucide className="animate-spin w-8 h-8 text-primary" icon="Loader" />
+                          </div>
+                        ) : imagePreview ? (
                           <div className="relative h-28 w-auto">
                             <img
                               className="rounded-md max-h-full max-w-full object-contain"
                               alt="Uploaded Preview"
                               src={imagePreview}
                             />
-                            <Tippy
-                              content="Remove this image?"
-                              className="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2 cursor-pointer"
-                              onClick={handleRemoveImage}
-                            >
-                              <Lucide icon="X" className="w-4 h-4" />
-                            </Tippy>
+                            {/* Show Remove icon only when image is uploaded and loading is false */}
+                            {data && existingProject?.image || !loading && (
+                              <Tippy
+                                content="Remove this image?"
+                                className="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2 cursor-pointer"
+                                onClick={handleRemoveImage}
+                              >
+                                <Lucide icon="X" className="w-4 h-4" />
+                              </Tippy>
+                            )}
                           </div>
                         ) : (
                           <div className="relative h-28 w-32 flex flex-col justify-center items-center">
@@ -919,9 +1043,15 @@ function Main() {
             <button
               type="button"
               className="btn py-3 border-slate-300 dark:border-darkmode-400 text-slate-500 w-full md:w-52"
-              onClick={handleAddProject}
-            >
-              Add New Project
+              onClick={handleAddOrUpdateProject}
+            >{loadingAdd ? (  
+              <div className="relative h-6 w-6 flex justify-center items-center">
+                <Lucide className="animate-spin w-4 h-4 text-primary" icon="Loader" />
+              </div>
+            ) : (
+              existingProject ? "Update Project" : "Add Project"
+            )
+            }
             </button>
           </div>
         </div>

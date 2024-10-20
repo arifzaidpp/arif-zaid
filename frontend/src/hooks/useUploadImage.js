@@ -25,8 +25,6 @@ const useUploadImage = () => {
       }
 
       const result = await response.json();
-
-      console.log(result.public_id);
       
 
       setPublicId(result.public_id); // Assuming the public ID is returned in result.public_id

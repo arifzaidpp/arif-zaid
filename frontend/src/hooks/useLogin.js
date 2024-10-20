@@ -1,6 +1,7 @@
 // hooks/useLogin.js
 import { useState } from 'react';
 import { useAuth } from '../context/authContext'; // Import auth context
+import toast from "react-hot-toast";
 
 const useLogin = () => {
     const [loading, setLoading] = useState(false);
@@ -28,12 +29,14 @@ const useLogin = () => {
 
             if (data.isAdmin) {
                 // Save user data in context if the user is an admin
+                toast.success("Login successful");
                 saveUser(data);
-                console.log('Admin login successful', data);
             } else {
+                toast.error("You do not have admin access");
                 throw new Error('You do not have admin access');
             }
         } catch (err) {
+            toast.error("Failed to login");
             setError(err.message);
         } finally {
             setLoading(false);

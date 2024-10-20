@@ -22,12 +22,14 @@ import ChangePassword from "./views/change-password/Main";
 import Notification from "./views/notification/Main";
 import SkillList from "./views/skill-list/Main";
 import PrivateRoute from './PrivateRoute'; // Import the PrivateRoute component
+import { Toaster } from "react-hot-toast";
 
 function App() {
     // Removed the useAuth call here, as we will handle authentication in PrivateRoute
     const { authUser } = useAuth();
 
     return (
+        <>
         <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
@@ -43,13 +45,14 @@ function App() {
             >
                 <Route path="/admin" element={<DashboardOverview1 />} />
                 <Route path="add-project" element={<AddProject />} />
-                <Route path="edit-projects" element={<ProjectGrid />} />
+                <Route path="projects" element={<ProjectGrid />} />
+                <Route path="edit-project/:id" element={<AddProject/>} />
                 <Route path="add-skill" element={<AddSkill />} />
-                <Route path="edit-skills" element={<SkillList />} />
+                <Route path="skills" element={<SkillList />} />
                 <Route path="add-certificate" element={<AddCertificate />} />
-                <Route path="edit-certificates" element={<CertificateGrid />} />
+                <Route path="certificates" element={<CertificateGrid />} />
                 <Route path="add-education" element={<AddEducation />} />
-                <Route path="edit-educations" element={<EducationList />} />
+                <Route path="educations" element={<EducationList />} />
                 <Route path="inbox" element={<Inbox />} />
                 <Route path="file-manager" element={<FileManager />} />
                 <Route path="chat" element={<Chat />} />
@@ -70,6 +73,10 @@ function App() {
             <Route path="/error-page" element={<ErrorPage />} />
             <Route path="*" element={<ErrorPage />} />
         </Routes>
+        <Toaster
+        position="top-right"
+        reverseOrder={false} />
+        </>
     );
 }
 
