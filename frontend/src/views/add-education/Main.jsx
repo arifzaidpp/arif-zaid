@@ -1,15 +1,29 @@
-import { Lucide, TomSelect, Tippy } from "@/base-components";
+import { Lucide } from "@/base-components";
 import { useState } from "react";
+import useAddEducation from "../../hooks/education/useAddEducation";
+import useEditEducation from "../../hooks/education/useEditEducation";
+
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import toast from "react-hot-toast";
+
 
 const Main = () => {
+  const location = useLocation();
+  const existingEducation = location.state?.education;
+
+  console.log(existingEducation);
   // State variables
-  const [educationName, setEducationName] = useState('');
+  const [educationName, setEducationName] = useState(existingEducation?.name || '');
   const [touchedEducationName, setTouchedEducationName] = useState(false);
-  const [educationInstitution, setEducationInstitution] = useState('');
+  const [educationInstitution, setEducationInstitution] = useState(existingEducation?.institution || '');
   const [touchedEducationInstitution, setTouchedEducationInstitution] = useState(false);
-  const [educationYear, setEducationYear] = useState('');
+  const [educationYear, setEducationYear] = useState(existingEducation?.year || '');
   const [touchedEducationYear, setTouchedEducationYear] = useState(false);
-  const [educationStatus, setEducationStatus] = useState(false);
+  const [educationStatus, setEducationStatus] = useState(existingEducation?.status || false);
+
+  // Add education hook
+  const { addEducation, loadingAdd, errorAdd } = useAddEducation();
+  const { editEducation, loadingEdit, errorEdit } = useEditEducation();
 
   const maxCharacters = 100;
   const maxCharactersYear = 4;
@@ -30,7 +44,7 @@ const Main = () => {
 
 
 
-  const handleAddEducation = () => {
+  const handleAddOrUpdateEducation = () => {
     // Check if all fields including the image are valid
     const isValid = isEducationNameValid() && isEducationInstitutionValid() && isEducationYearValid();
 
@@ -44,12 +58,27 @@ const Main = () => {
 
     } else {
 
+      // Prepare education data
+      const educationData = {
+        education: educationName,
+        institution: educationInstitution,
+        year: educationYear,
+        status: educationStatus,
+      };
+      
 
-      console.log('Education added successfully!' + educationName , educationInstitution, educationYear, educationStatus);
-
-
-      // Logic to add the education
-      // Your education addition logic goes here
+      try {
+        // If existing education exists, edit the education
+        if (existingEducation) {
+          editEducation(existingEducation._id, educationData);
+        } else {
+          // Add the education
+          addEducation(educationData);
+        }
+      } catch (error) {
+        console.error('Failed to add education', error);
+        toast.error('Failed to add education');
+      }
     }
   };
 
@@ -231,9 +260,15 @@ const Main = () => {
             <button
               type="button"
               className="btn py-3 border-slate-300 dark:border-darkmode-400 text-slate-500 w-full md:w-52"
-              onClick={handleAddEducation}
-            >
-              Add New Education
+              onClick={handleAddOrUpdateEducation}
+            >{loadingAdd ? (
+              <div className="relative h-6 w-6 flex justify-center items-center">
+                <Lucide className="animate-spin w-4 h-4 text-primary" icon="Loader" />
+              </div>
+            ) : (
+              existingEducation ? "Update Education" : "Add Education"
+            )
+              }
             </button>
           </div>
         </div>
@@ -252,10 +287,9 @@ const Main = () => {
                 className="w-12 h-12 text-warning/80 absolute top-0 right-0 mt-5 mr-3"
               />
               <h2 className="text-lg font-medium">Tips</h2>
-              <div className="mt-5 font-medium">Price</div>
               <div className="leading-relaxed text-xs mt-2 text-slate-600 dark:text-slate-500">
                 <div>
-                  The image format is .jpg .jpeg .png and a minimum size of 300 x 300 pixels (For optimal images use a minimum size of 700 x 700 pixels).
+                  Add the education you have completed or are currently pursuing.
                 </div>
                 <div className="mt-2">
                   Consider the target audience when naming your education to ensure the title resonates and communicates the intended theme effectively.

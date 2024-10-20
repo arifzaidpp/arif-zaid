@@ -6,6 +6,7 @@ import { requireLiveField } from "../middleware/liveRequire.js";
 import { checkIdParam } from "../middleware/editDetails.js";
 import { addSkill, deleteSkill, editSkill, getAllSkills } from "../controllers/skill.controller.js";
 import { addCertificate, deleteCertificate, editCertificate, getAllCertificates } from "../controllers/certificate.controller.js";
+import { addEducation, deleteEducation, editEducation, getAllEducations } from "../controllers/education.controller.js";
 
 const router = express.Router();
 
@@ -23,5 +24,9 @@ router.post('/add-certificate', addCertificate);
 router.put('/edit-certificate/:id', checkIdParam, editCertificate);
 router.delete('/delete-certificate/:id', checkIdParam, deleteCertificate);
 router.get('/certificates', getAllCertificates);
+router.post('/add-education', addEducation);
+router.put('/edit-education/:id', checkIdParam, editEducation);
+router.delete('/delete-education/:id', checkIdParam, deleteEducation);
+router.get('/educations', getAllEducations);
 
 export default router;
