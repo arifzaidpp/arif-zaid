@@ -100,7 +100,7 @@ const Contact = () => {
                         <div className="flex items-center justify-center w-14 h-14 bg-[#008073] rounded-full text-white">
                             <FaGlobe size={24} className="md:text-3xl lg:text-4xl" />
                         </div>
-                        <p className="mt-2 text-sm text-gray-700 max-w-64 text-center"><span className="font-semibold">Website : </span> arifzaidpp.com</p>
+                        <p className="mt-2 text-sm text-gray-700 max-w-64 text-center"><span className="font-semibold">Website : </span> arif-zaid.onrender.com</p>
                     </div>
                 </div>
                 </section>
