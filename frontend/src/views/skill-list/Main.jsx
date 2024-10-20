@@ -1,34 +1,69 @@
 import {
   Lucide,
   Tippy,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownContent,
-  DropdownItem,
   Modal,
   ModalBody,
 } from "@/base-components";
 import { faker as $f } from "@/utils";
 import * as $_ from "lodash";
 import { useState } from "react";
-import classnames from "classnames";
+import useGetAllSkills from "../../hooks/skill/useGetAllSkills";
+import useDeleteSkill from "../../hooks/skill/useDeleteSkill";
+import { useNavigate } from 'react-router-dom';
+import toast from "react-hot-toast";
+
 
 function Main() {
   const [deleteConfirmationModal, setDeleteConfirmationModal] = useState(false);
+  const [selectedSkillId, setSelectedSkillId] = useState(null); // Track selected skill ID
+  const { skills, loading, error } = useGetAllSkills();
+  const { deleteSkill, loadingDelete } = useDeleteSkill(); // Use delete hook
+  const navigate = useNavigate();
+
+  // Handle skill deletion after confirmation
+  const confirmDeleteSkill = async () => {
+    if (selectedSkillId) {
+      try {
+        await deleteSkill(selectedSkillId); // Call delete function from hook
+        setDeleteConfirmationModal(false); // Close the modal after deletion
+        setSelectedSkillId(null); // Reset selected skill ID
+      } catch (error) {
+        console.error("Failed to delete skill:", error);
+        toast.error("Failed to delete skill. Please try again.");
+      }
+    }
+  };
+
+
+  // Handle delete skill button click (opens the modal)
+  const handleDeleteSkill = (skillId) => {
+    setSelectedSkillId(skillId); // Set the selected project ID
+    setDeleteConfirmationModal(true); // Open the modal
+  };
+
+  // Render loading state
+  if (loading) {
+    return <div className="text-center">Loading projects...</div>;
+  }
+
+  // Render error state
+  if (error) {
+    return <div className="text-red-600 text-center">Error: {error}</div>;
+  }
+
 
   return (
     <>
       <h2 className="intro-y text-lg font-medium mt-10">Edit Skills</h2>
       <div className="grid grid-cols-12 gap-6 mt-5">
         <div className="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-          <a href="/add-skill">
+          <a href="/admin/add-skill">
             <button className="btn btn-primary shadow-md mr-2">
               Add New Skill
             </button>
 
           </a>
-          <a href="/add-skill">
+          <a href="/admin/add-skill">
             <button className="btn px-2 box">
               <span className="w-5 h-5 flex items-center justify-center">
                 <Lucide icon="Plus" className="w-4 h-4" />
@@ -65,45 +100,44 @@ function Main() {
               </tr>
             </thead>
             <tbody>
-              {$_.take($f(), 9).map((faker, fakerKey) => (
-                <tr key={fakerKey} className="intro-x">
+              {skills.map((skill, skillKey) => (
+                <tr key={skillKey} className="intro-x">
                   <td className="w-40">
                     <div className="flex">
                       <div className="w-10 h-10 image-fit zoom-in">
                         <Tippy
                           tag="img"
-                          alt="Midone Tailwind HTML Admin Template"
+                          alt="Skill Image"
                           className="rounded-full"
-                          src={faker.images[0]}
-                          content={`Uploaded at ${faker.dates[0]}`}
+                          src={skill.image}
+                          content={`Uploaded at `}
                         />
                       </div>
                     </div>
                   </td>
                   <td>
                     <a href="" className="font-medium whitespace-nowrap">
-                      {faker.products[0].name}
+                      {skill.name}
                     </a>
                     <div className="text-slate-500 text-xs whitespace-nowrap mt-0.5">
-                      {faker.products[0].category}
+                      {skill.category}
                     </div>
                   </td>
-                  <td className="text-left">{faker.stocks[0]}</td> {/* Changed from text-center to text-left */}
+                  <td className="text-left">{skill.section}</td> {/* Changed from text-center to text-left */}
                   <td className="text-left">
-                    {faker.products[0].category}
+                    {skill.category}
                   </td>
                   <td className="table-report__action w-56">
                     <div className="flex justify-center items-center">
-                      <a className="flex items-center mr-3" href="#">
+                      <a className="flex items-center mr-3"
+                      onClick={() => navigate(`/admin/edit-skill/${skill._id}`, { state: { skill } })}>
                         <Lucide icon="CheckSquare" className="w-4 h-4 mr-1" />{" "}
                         Edit
                       </a>
                       <a
                         className="flex items-center text-danger"
                         href="#"
-                        onClick={() => {
-                          setDeleteConfirmationModal(true);
-                        }}
+                        onClick={() => handleDeleteSkill(skill._id)}
                       >
                         <Lucide icon="Trash2" className="w-4 h-4 mr-1" /> Delete
                       </a>
@@ -176,42 +210,41 @@ function Main() {
         </div>
         {/* END: Pagination */}
       </div>
-      {/* BEGIN: Delete Confirmation Modal */}
+      {/* BEGIN: Modal for Deleting */}
       <Modal
         show={deleteConfirmationModal}
         onHidden={() => {
           setDeleteConfirmationModal(false);
         }}
       >
-        <ModalBody className="p-0">
-          <div className="p-5 text-center">
-            <Lucide
-              icon="XCircle"
-              className="w-16 h-16 text-danger mx-auto mt-3"
-            />
-            <div className="text-3xl mt-5">Are you sure?</div>
-            <div className="text-slate-500 mt-2">
-              Do you really want to delete these records? <br />
-              This process cannot be undone.
-            </div>
+        <ModalBody className="p-5 text-center">
+          <Lucide icon="XCircle" className="w-16 h-16 text-danger mx-auto mt-3" />
+          <div className="text-3xl mt-5">Are you sure?</div>
+          <div className="text-slate-500 mt-2">
+            Do you really want to delete this skill? This process cannot be undone.
           </div>
-          <div className="px-5 pb-8 text-center">
+          <div className="flex justify-center mt-5">
             <button
               type="button"
+              onClick={confirmDeleteSkill} // Trigger project deletion
+              className="btn btn-danger w-24"
+              disabled={loadingDelete} // Disable button if delete is in progress
+            >
+              {loadingDelete ? "Deleting..." : "Delete"}
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-secondary w-24 ml-2"
               onClick={() => {
                 setDeleteConfirmationModal(false);
               }}
-              className="btn btn-outline-secondary w-24 mr-1"
             >
               Cancel
-            </button>
-            <button type="button" className="btn btn-danger w-24">
-              Delete
             </button>
           </div>
         </ModalBody>
       </Modal>
-      {/* END: Delete Confirmation Modal */}
+      {/* END: Modal for Deleting */}
     </>
   );
 }

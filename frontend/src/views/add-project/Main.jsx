@@ -6,8 +6,8 @@ import {
 import { useEffect, useState } from "react";
 import useUploadImage from "../../hooks/useUploadImage";
 import useDeleteImage from "../../hooks/useDeleteImage";
-import useAddProject from "../../hooks/useAddProject";
-import useEditProject from "../../hooks/useEditProject";
+import useAddProject from "../../hooks/project/useAddProject";
+import useEditProject from "../../hooks/project/useEditProject";
 
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import toast from "react-hot-toast";
