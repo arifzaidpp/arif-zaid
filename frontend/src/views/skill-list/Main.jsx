@@ -4,8 +4,6 @@ import {
   Modal,
   ModalBody,
 } from "@/base-components";
-import { faker as $f } from "@/utils";
-import * as $_ from "lodash";
 import { useState } from "react";
 import useGetAllSkills from "../../hooks/skill/useGetAllSkills";
 import useDeleteSkill from "../../hooks/skill/useDeleteSkill";
