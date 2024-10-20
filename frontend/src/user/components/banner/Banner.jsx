@@ -6,7 +6,7 @@ const Banner = () => {
       <div className="relative w-full h-full">
         {/* Background Image */}
         <img
-          src="./src/assets/Banner.jpeg" // Replace with the correct path to the image
+          src="https://res.cloudinary.com/drnexn1qc/image/upload/v1729446959/uploads/e2ngxyszqnfkerdteagk.jpg" // Replace with the correct path to the image
           alt="Banner"
           className="object-cover w-full h-full"
         />
