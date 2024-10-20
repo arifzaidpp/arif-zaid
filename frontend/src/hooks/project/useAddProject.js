@@ -24,6 +24,7 @@ const useAddProject = () => {
             }
 
             const data = await response.json();
+            window.location.replace('/admin/projects');
             return data; // return response data if necessary
         } catch (err) {
             setErrorAdd(err.message);

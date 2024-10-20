@@ -55,19 +55,28 @@ const Main = () => {
   const [section, setSection] = useState(existingSkill?.section || []); // Changed to array
   const [categories, setCategories] = useState([
     { label: '', value: '' },
-    { label: 'Web Development', value: 'web-development' },
-    { label: 'Mobile Development', value: 'mobile-development' },
-    { label: 'Design', value: 'design' },
-    { label: 'Marketing', value: 'marketing' },
-    { label: 'Business', value: 'business' },
+    { label: 'Markup Languages', value: 'Markup Languages' },
+    { label: 'Stylesheets', value: 'Stylesheets' },
+    { label: 'JavaScript Libraries/Frameworks', value: 'JavaScript Libraries/Frameworks' },
+    { label: 'Languages and Frameworks', value: 'Languages and Frameworks' },
+    { label: 'Testing Frameworks', value: 'Testing Frameworks' },
+    { label: 'Databases', value: 'Databases' },
+    { label: 'Build Tools', value: 'Build Tools' },
+    { label: 'Web Development', value: 'Web Development' },
+    { label: 'Mobile Development', value: 'Mobile= Development' },
+    { label: 'Design', value: 'Design' },
+    { label: 'Marketing', value: 'Marketing' },
+    { label: 'Business', value: 'Business' },
+    { label: 'Other Tools', value: 'Other Tools' },
   ]);
   const [sections, setSections] = useState([
     { label: '', value: '' },
-    { label: 'Frontend', value: 'frontend' },
-    { label: 'Backend', value: 'backend' },
-    { label: 'Fullstack', value: 'fullstack' },
-    { label: 'UI/UX', value: 'ui-ux' },
-    { label: 'SEO', value: 'seo' },
+    { label: 'Frontend Technologies', value: 'Frontend Technologies' },
+    { label: 'Backend Technologies', value: 'Backend Technologies' },
+    { label: 'Fullstack', value: 'Fullstack' },
+    { label: 'UI/UX', value: 'UI/UX' },
+    { label: 'SEO', value: 'SEO' },
+    { label: 'Other Tools', value: 'Other Tools' },
   ]);
   const [touchedSkillName, setTouchedSkillName] = useState(false);
   const [touchedSkillCategory, setTouchedSkillCategory] = useState(false);

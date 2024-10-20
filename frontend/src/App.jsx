@@ -55,6 +55,7 @@ function App() {
                 <Route path="edit-certificate/:id" element={<AddCertificate />} />
                 <Route path="add-education" element={<AddEducation />} />
                 <Route path="educations" element={<EducationList />} />
+                <Route path="edit-education/:id" element={<AddEducation />} />
                 <Route path="inbox" element={<Inbox />} />
                 <Route path="file-manager" element={<FileManager />} />
                 <Route path="chat" element={<Chat />} />

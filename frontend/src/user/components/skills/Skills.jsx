@@ -1,7 +1,10 @@
 import React from "react";
 import SectionHeaders from "../sectionHeaders/SectionHeaders";
+import useGetAllSkills from "../../../hooks/skill/useGetAllSkills";
 
 const Skills = () => {
+  // Get all skills from the API
+  const { skills, loading, error } = useGetAllSkills();
   const skillsData = [
     {
       section: "Frontend Technologies",

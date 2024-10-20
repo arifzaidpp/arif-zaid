@@ -24,6 +24,7 @@ const useAddSkill = () => {
             }
 
             const data = await response.json();
+            window.location.replace('/admin/skills');
             return data; // return response data if necessary
         } catch (err) {
             setErrorAdd(err.message);

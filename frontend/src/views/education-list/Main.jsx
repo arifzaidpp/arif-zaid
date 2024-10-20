@@ -1,34 +1,66 @@
 import {
   Lucide,
-  Tippy,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownContent,
-  DropdownItem,
   Modal,
   ModalBody,
 } from "@/base-components";
 import { faker as $f } from "@/utils";
 import * as $_ from "lodash";
 import { useState } from "react";
-import classnames from "classnames";
+import { useNavigate } from 'react-router-dom';
+import toast from "react-hot-toast";
+import useDeleteEducation from "../../hooks/education/useDeleteEducation";
+import useGetAllEducations from "../../hooks/education/useGetAllEducations";
 
 function Main() {
   const [deleteConfirmationModal, setDeleteConfirmationModal] = useState(false);
+  const [selectedEducationId, setSelectedEducationId] = useState(null); // Track selected education ID
+  const { educations, loading, error } = useGetAllEducations();
+  const { deleteEducation, loadingDelete } = useDeleteEducation(); // Use delete hook
+  const navigate = useNavigate();
+
+  // Handle education deletion after confirmation
+  const confirmDeleteEducation = async () => {
+    if (selectedEducationId) {
+      try {
+        await deleteEducation(selectedEducationId); // Call delete function from hook
+        setDeleteConfirmationModal(false); // Close the modal after deletion
+        setSelectedEducationId(null); // Reset selected education ID
+      } catch (error) {
+        console.error("Failed to delete education:", error);
+        toast.error("Failed to delete education. Please try again.");
+      }
+    }
+  };
+
+
+  // Handle delete education button click (opens the modal)
+  const handleDeleteEducation = (educationId) => {
+    setSelectedEducationId(educationId); // Set the selected project ID
+    setDeleteConfirmationModal(true); // Open the modal
+  };
+
+  // Render loading state
+  if (loading) {
+    return <div className="text-center">Loading projects...</div>;
+  }
+
+  // Render error state
+  if (error) {
+    return <div className="text-red-600 text-center">Error: {error}</div>;
+  }
 
   return (
     <>
       <h2 className="intro-y text-lg font-medium mt-10">Edit Education</h2>
       <div className="grid grid-cols-12 gap-6 mt-5">
         <div className="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-        <a href="/add-education">
+        <a href="/admin/add-education">
             <button className="btn btn-primary shadow-md mr-2">
               Add New Education
             </button>
 
           </a>
-          <a href="/add-education">
+          <a href="/admin/add-education">
             <button className="btn px-2 box">
               <span className="w-5 h-5 flex items-center justify-center">
                 <Lucide icon="Plus" className="w-4 h-4" />
@@ -65,32 +97,31 @@ function Main() {
               </tr>
             </thead>
             <tbody>
-              {$_.take($f(), 9).map((faker, fakerKey) => (
-                <tr key={fakerKey} className="intro-x">
+              {educations.map((education, educationKey) => (
+                <tr key={educationKey} className="intro-x">
                   <td className="font-medium whitespace-nowrap">
-                  {faker.products[0].name}
+                  {education.education}
                   </td>
                   <td className="font-medium whitespace-nowrap">
-                  {faker.products[0].category}
+                  {education.institution}
                   </td>
                   <td className="font-medium whitespace-nowrap">
-                  {faker.stocks[0]}
+                  {education.year}
                   </td>
                   <td className="text-left">
-                  {faker.trueFalse[0] ? "Completed" : "In Progress"}
+                  {education.status ? "Completed" : "In Progress"}
                   </td>
                   <td className="table-report__action w-56">
                     <div className="flex justify-center items-center">
-                      <a className="flex items-center mr-3" href="#">
+                    <a className="flex items-center mr-3"
+                      onClick={() => navigate(`/admin/edit-education/${education._id}`, { state: { education } })}>
                         <Lucide icon="CheckSquare" className="w-4 h-4 mr-1" />{" "}
                         Edit
                       </a>
                       <a
                         className="flex items-center text-danger"
                         href="#"
-                        onClick={() => {
-                          setDeleteConfirmationModal(true);
-                        }}
+                        onClick={() => handleDeleteEducation(education._id)}
                       >
                         <Lucide icon="Trash2" className="w-4 h-4 mr-1" /> Delete
                       </a>
@@ -163,42 +194,41 @@ function Main() {
         </div>
         {/* END: Pagination */}
       </div>
-      {/* BEGIN: Delete Confirmation Modal */}
+      {/* BEGIN: Modal for Deleting */}
       <Modal
         show={deleteConfirmationModal}
         onHidden={() => {
           setDeleteConfirmationModal(false);
         }}
       >
-        <ModalBody className="p-0">
-          <div className="p-5 text-center">
-            <Lucide
-              icon="XCircle"
-              className="w-16 h-16 text-danger mx-auto mt-3"
-            />
-            <div className="text-3xl mt-5">Are you sure?</div>
-            <div className="text-slate-500 mt-2">
-              Do you really want to delete these records? <br />
-              This process cannot be undone.
-            </div>
+        <ModalBody className="p-5 text-center">
+          <Lucide icon="XCircle" className="w-16 h-16 text-danger mx-auto mt-3" />
+          <div className="text-3xl mt-5">Are you sure?</div>
+          <div className="text-slate-500 mt-2">
+            Do you really want to delete this education? This process cannot be undone.
           </div>
-          <div className="px-5 pb-8 text-center">
+          <div className="flex justify-center mt-5">
             <button
               type="button"
+              onClick={confirmDeleteEducation} // Trigger project deletion
+              className="btn btn-danger w-24"
+              disabled={loadingDelete} // Disable button if delete is in progress
+            >
+              {loadingDelete ? "Deleting..." : "Delete"}
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-secondary w-24 ml-2"
               onClick={() => {
                 setDeleteConfirmationModal(false);
               }}
-              className="btn btn-outline-secondary w-24 mr-1"
             >
               Cancel
-            </button>
-            <button type="button" className="btn btn-danger w-24">
-              Delete
             </button>
           </div>
         </ModalBody>
       </Modal>
-      {/* END: Delete Confirmation Modal */}
+      {/* END: Modal for Deleting */}
     </>
   );
 }
