@@ -13,8 +13,6 @@ export const uploadImage = async (req, res) => {
 
     const imageUrl = result.secure_url;
     const publicId = result.public_id;
-
-    console.log("Image uploaded successfully", imageUrl);
     
 
     return res.status(201).json({ message:" Success ", image: imageUrl, public_id: publicId });
@@ -33,8 +31,6 @@ export const deleteImage = async (req, res) => {
       }
   
       const result = await deleteImg(public_id);
-
-      console.log(result);
 
       const message = result.success ? result.message : result.error.message;
       const status = result.success ? 200 : 400

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../context/authContext';
+import toast from "react-hot-toast";
 
 const useLogout = () => {
   const [loading, setLoading] = useState(false);
@@ -26,9 +27,10 @@ const useLogout = () => {
         // Clear user data after successful logout
         setAuthUser(null); // This line should trigger a re-render
         localStorage.removeItem('authUser'); // Make sure to remove user data from localStorage
+        toast.success("Logout successful");
 
-        console.log('Logout successful');
     } catch (err) {
+        toast.error("Failed to logout");
         setError(err.message);
     } finally {
         setLoading(false);
