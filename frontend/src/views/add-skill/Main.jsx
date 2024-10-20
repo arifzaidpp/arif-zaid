@@ -2,8 +2,18 @@ import { Lucide, TomSelect, Tippy } from "@/base-components";
 import { useEffect, useState } from "react";
 import useUploadImage from "../../hooks/useUploadImage";
 import useDeleteImage from "../../hooks/useDeleteImage";
+import useAddSkill from "../../hooks/skill/useAddSkill";
+import useEditSkill from "../../hooks/skill/useEditSkill";
+
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import toast from "react-hot-toast";
+
 
 const Main = () => {
+  const location = useLocation(); 
+  const existingSkill = location.state?.skill;
+
+  console.log(existingSkill);
   // State variables
   const [isSkillImageOpen, setIsSkillImageOpen] = useState(true);
   const [isSkillInfoOpen, setIsSkillInfoOpen] = useState(false);
@@ -11,12 +21,38 @@ const Main = () => {
 
   const { uploadImage, loading, error, data, publicId } = useUploadImage();
   const { deleteImage, deleteLoading, deleteError } = useDeleteImage();
+  const { addSkill, loadingAdd, errorAdd } = useAddSkill();
+  const { editSkill, loadingEdit, errorEdit } = useEditSkill();
 
-  const [imagePreview, setImagePreview] = useState(null);
-  const [imageName, setImageName] = useState("");
-  const [skillName, setSkillName] = useState('');
-  const [category, setCategory] = useState([]); // Changed to array
-  const [section, setSection] = useState([]); // Changed to array
+  const extractPublicId = (imageUrl) => {
+    // Regex to match everything after 'upload/' until the file extension
+    const regex = /upload\/(?:[^\/]+\/)?([^\.]+)/;
+    const match = imageUrl.match(regex);
+
+    // If there's a match, return the captured group (the public_id), else return null
+    return match ? match[1] : null;
+};
+var publicIdEdit = null;
+
+
+// Check if existingSkill and its image exist
+if (existingSkill?.image) {
+    const imageUrl = existingSkill.image;
+
+    // Extract public_id
+   publicIdEdit = extractPublicId(imageUrl);
+    
+    console.log(publicIdEdit);  // This will run only if existingSkill has a value
+} else {
+    console.log("No existing project or image found.");
+}
+
+
+  const [imagePreview, setImagePreview] = useState(existingSkill?.image || null);
+  const [imageName, setImageName] = useState(existingSkill?.image || "");
+  const [skillName, setSkillName] = useState(existingSkill?.name || "");
+  const [category, setCategory] = useState(existingSkill?.category || []); // Changed to array
+  const [section, setSection] = useState(existingSkill?.section || []); // Changed to array
   const [categories, setCategories] = useState([
     { label: '', value: '' },
     { label: 'Web Development', value: 'web-development' },
@@ -68,8 +104,8 @@ const Main = () => {
   };
 
   const handleRemoveImage = async () => {
-    if (publicId) {
-      await deleteImage(publicId);
+    if (publicId || publicIdEdit) {
+      await deleteImage(publicId || publicIdEdit);
       setImagePreview(null);
       setImageName("");
       setTouchedSkillImage(true);
@@ -120,7 +156,7 @@ const Main = () => {
     setSections([...sections, newSection]);
   };
 
-  const handleAddSkill = () => {
+  const handleAddOrUpdateProject = async () => {
     // Check if all fields including the image are valid
     const isValid = isSkillNameValid() && isSkillCategoryValid() && isSkillSectionValid() && isSkillImageValid;
 
@@ -146,8 +182,25 @@ const Main = () => {
       setIsSkillInfoOpen(true);
       setIsSkillImageOpen(true);
 
+      const skillData = {
+        image: imagePreview,
+        name: skillName,
+        category: category,
+        section: section,
+      };
 
-      console.log('Skill added successfully!' + imageName, skillName, section, category);
+      try {
+        if (existingSkill) {
+          // Edit skill
+          await editSkill(existingSkill._id, skillData);
+        } else {
+          // Add new skill
+          await addSkill(skillData);
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to add skill");
+      }
 
 
       // Logic to add the skill
@@ -156,14 +209,24 @@ const Main = () => {
   };
 
 
-  // Use useEffect to log data when it updates and set the image preview
   useEffect(() => {
     if (data) {
-      console.log('Upload successful:', data); // Log when data updates
+      if (imagePreview) {
+        setImagePreview(null); // Clear the preview when new image is uploaded
+        setImagePreview(data)
+        existingSkill.image = null;
+      }
       setImagePreview(data); // Set the preview when data is available
     }
-  }, [data]); // Runs whenever 'data' changes
-
+  }, [data]);
+  
+  useEffect(() => {
+    const skillUpdated = sessionStorage.getItem('skillUpdated');
+    if (skillUpdated) {
+      toast.success("Skill updated successfully");
+      sessionStorage.removeItem('skillUpdated'); // Clean up flag
+    }
+  }, []);
 
 
   return (
@@ -235,7 +298,7 @@ const Main = () => {
                               src={imagePreview}
                             />
                             {/* Show Remove icon only when image is uploaded and loading is false */}
-                            {data && !loading && (
+                            {data && existingSkill?.image || !loading && (
                               <Tippy
                                 content="Remove this image?"
                                 className="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2 cursor-pointer"
@@ -435,9 +498,15 @@ const Main = () => {
             <button
               type="button"
               className="btn py-3 border-slate-300 dark:border-darkmode-400 text-slate-500 w-full md:w-52"
-              onClick={handleAddSkill}
-            >
-              Add New Skill
+              onClick={handleAddOrUpdateProject}
+            >{loadingAdd ? (  
+              <div className="relative h-6 w-6 flex justify-center items-center">
+                <Lucide className="animate-spin w-4 h-4 text-primary" icon="Loader" />
+              </div>
+            ) : (
+              existingSkill ? "Update Skill" : "Add Skill"
+            )
+            }
             </button>
           </div>
         </div>

@@ -3,8 +3,8 @@ import {
   Modal,
   ModalBody,
 } from "@/base-components";
-import useGetAllProjects from '../../hooks/useGetAllProjects';
-import useDeleteProject from '../../hooks/useDeleteProject'; // Import delete hook
+import useGetAllProjects from '../../hooks/project/useGetAllProjects';
+import useDeleteProject from '../../hooks/project/useDeleteProject'; // Import delete hook
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import toast from "react-hot-toast";
@@ -67,7 +67,7 @@ function Main() {
               Add New Product
             </button>
           </a>
-          <a href="/add-project">
+          <a href="/admin/add-project">
             <button className="btn px-2 box">
               <span className="w-5 h-5 flex items-center justify-center">
                 <Lucide icon="Plus" className="w-4 h-4" />
