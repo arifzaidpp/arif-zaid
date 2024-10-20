@@ -71,7 +71,6 @@ export const editProject = async (req, res) => {
             return res.status(404).json({ error: 'Project not found' });
         }
 
-        console.log(updatedProject);
         
         return res.status(200).json({ message: 'Project updated successfully', updatedProject });
     } catch (error) {

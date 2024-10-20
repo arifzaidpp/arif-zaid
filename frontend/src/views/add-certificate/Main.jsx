@@ -13,7 +13,6 @@ const Main = () => {
   const location = useLocation();
   const existingCertificate = location.state?.certificate;
 
-  console.log(existingCertificate);
   // State variables
   const [isCertificateImageOpen, setIsCertificateImageOpen] = useState(true);
   const [isCertificateInfoOpen, setIsCertificateInfoOpen] = useState(false);
@@ -40,9 +39,8 @@ const Main = () => {
     // Extract public_id
     publicIdEdit = extractPublicId(imageUrl);
 
-    console.log(publicIdEdit);  // This will run only if existingCertificate has a value
   } else {
-    console.log("No existing certificate or image found.");
+    toast.error("No existing certificate or image found.");
   }
 
   const [date, setDate] = useState(existingCertificate?.date || "");
@@ -158,7 +156,6 @@ const Main = () => {
     const isValid = isCertificateNameValid() && isCertificateCategoryValid() && isCertificateImageValid;
 
     if (!isValid) {
-      console.log('Please fill out all required fields.');
 
       // Set touched states to trigger error messages
       setTouchedCertificateName(true);
@@ -195,13 +192,6 @@ const Main = () => {
         console.error(error);
         toast.error("Failed to add certificate");
       }
-
-      console.log('Certificate added successfully!', {
-        imageName,
-        certificateName,
-        category,
-        date // Include the selected date
-      });
 
       // Logic to add the certificate
       // Your certificate addition logic goes here

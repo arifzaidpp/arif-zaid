@@ -16,9 +16,6 @@ function Main() {
   const location = useLocation(); // Access location state to get project data for update
   const existingProject = location.state?.project; // Check if a project is passed for editing
 
-  console.log(existingProject);
-  
-
   // State variables for form fields
   const [projectName, setProjectName] = useState(existingProject?.name || "");
   const [imageName, setImageName] = useState(existingProject?.image || "");
@@ -54,10 +51,9 @@ if (existingProject?.image) {
 
     // Extract public_id
    publicIdEdit = extractPublicId(imageUrl);
-    
-    console.log(publicIdEdit);  // This will run only if existingProject has a value
+
 } else {
-    console.log("No existing project or image found.");
+    toast.error("No existing project or image found.");
 }
 
 
@@ -276,9 +272,7 @@ if (existingProject?.image) {
     }
   };
 
-  const handleRemoveImage = async () => {
-    console.log("Removing image...");
-    
+  const handleRemoveImage = async () => {    
     if (publicId || publicIdEdit) {
       await deleteImage(publicId || publicIdEdit);
       setImagePreview(null);
@@ -418,7 +412,6 @@ const handleAddOrUpdateProject = async (e) => {
       if (existingProject) {
         // Update project if editing
         await editProject(existingProject._id, projectData);
-        console.log('Project updated successfully');
       } else {
         // Add new project
         const result = await addProject(projectData);
