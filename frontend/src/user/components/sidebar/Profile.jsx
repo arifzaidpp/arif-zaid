@@ -8,7 +8,7 @@ const Profile = () => {
       {/* Profile Picture */}
       <div className="relative mb-2">
         <img
-          src="./src/assets/ArifZaid-Profile.jpeg" // Replace with your profile photo URL
+          src="https://res.cloudinary.com/drnexn1qc/image/upload/v1729447032/uploads/ocdwzhweyz4p98ttlzfx.jpg" // Replace with your profile photo URL
           alt="Profile"
           className="w-24 h-24 rounded-full object-cover border-2 border-gray-300"
         />
