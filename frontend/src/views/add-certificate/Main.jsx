@@ -2,18 +2,54 @@ import { Lucide, TomSelect, Tippy, Litepicker } from "@/base-components";
 import { useEffect, useState } from "react";
 import useUploadImage from "../../hooks/useUploadImage";
 import useDeleteImage from "../../hooks/useDeleteImage";
+import useAddCertificate from "../../hooks/certificate/useAddCertificate";
+import useEditCertificate from "../../hooks/certificate/useEditCertificate";
+
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import toast from "react-hot-toast";
+
 
 const Main = () => {
-  const [date, setDate] = useState("");
+  const location = useLocation();
+  const existingCertificate = location.state?.certificate;
+
+  console.log(existingCertificate);
   // State variables
   const [isCertificateImageOpen, setIsCertificateImageOpen] = useState(true);
   const [isCertificateInfoOpen, setIsCertificateInfoOpen] = useState(false);
   const [isCertificateImageValid, setIsCertificateImageValid] = useState(true);
 
-  const [imagePreview, setImagePreview] = useState(null);
-  const [imageName, setImageName] = useState("");
-  const [certificateName, setCertificateName] = useState('');
-  const [category, setCategory] = useState([]); // Changed to array
+  const { editCertificate, loadingEdit, errorEdit } = useEditCertificate();
+  const { addCertificate, loadingAdd, errorAdd } = useAddCertificate();
+
+  const extractPublicId = (imageUrl) => {
+    // Regex to match everything after 'upload/' until the file extension
+    const regex = /upload\/(?:[^\/]+\/)?([^\.]+)/;
+    const match = imageUrl.match(regex);
+
+    // If there's a match, return the captured group (the public_id), else return null
+    return match ? match[1] : null;
+  };
+  var publicIdEdit = null;
+
+
+  // Check if existingCertificate and its image exist
+  if (existingCertificate?.image) {
+    const imageUrl = existingCertificate.image;
+
+    // Extract public_id
+    publicIdEdit = extractPublicId(imageUrl);
+
+    console.log(publicIdEdit);  // This will run only if existingCertificate has a value
+  } else {
+    console.log("No existing certificate or image found.");
+  }
+
+  const [date, setDate] = useState(existingCertificate?.date || "");
+  const [imagePreview, setImagePreview] = useState(existingCertificate?.image || null);
+  const [imageName, setImageName] = useState(existingCertificate?.image || "");
+  const [certificateName, setCertificateName] = useState(existingCertificate?.name || "");
+  const [category, setCategory] = useState(existingCertificate?.category || []); // Changed to array
   const [categories, setCategories] = useState([
     { label: '', value: '' },
     { label: 'Web Development', value: 'web-development' },
@@ -74,8 +110,8 @@ const Main = () => {
   };
 
   const handleRemoveImage = async () => {
-    if (publicId) {
-      await deleteImage(publicId); // Call deleteImage with the public ID
+    if (publicId || publicIdEdit) {
+      await deleteImage(publicId || publicIdEdit); // Call deleteImage with the public ID
       setImagePreview(null); // Remove the image preview
       setImageName("");
       setTouchedCertificateImage(true);
@@ -117,7 +153,7 @@ const Main = () => {
 
 
 
-  const handleAddCertificate = () => {
+  const handleAddOrUpdateCertificate = () => {
     // Check if all fields including the image are valid
     const isValid = isCertificateNameValid() && isCertificateCategoryValid() && isCertificateImageValid;
 
@@ -142,6 +178,24 @@ const Main = () => {
       setIsCertificateInfoOpen(true);
       setIsCertificateImageOpen(true);
 
+      const certificateData = {
+        name: certificateName,
+        category: category,
+        image: imagePreview,
+        date: date,
+      };
+
+      try {
+        if (existingCertificate) {
+          editCertificate(existingCertificate._id, certificateData);
+        } else {
+          addCertificate(certificateData);
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to add certificate");
+      }
+
       console.log('Certificate added successfully!', {
         imageName,
         certificateName,
@@ -158,11 +212,22 @@ const Main = () => {
   // Use useEffect to log data when it updates and set the image preview
   useEffect(() => {
     if (data) {
-      console.log('Upload successful:', data); // Log when data updates
+      if (imagePreview) {
+        setImagePreview(null); // Clear the preview when new image is uploaded
+        setImagePreview(data)
+        existingCertificate.image = null;
+      }
       setImagePreview(data); // Set the preview when data is available
     }
-  }, [data]); // Runs whenever 'data' changes
-
+  }, [data]);
+  
+  useEffect(() => {
+    const certificateUpdated = sessionStorage.getItem('certificateUpdated');
+    if (certificateUpdated) {
+      toast.success("Certificate updated successfully");
+      sessionStorage.removeItem('certificateUpdated'); // Clean up flag
+    }
+  }, []);
 
   return (
     <>
@@ -233,7 +298,7 @@ const Main = () => {
                               src={imagePreview}
                             />
                             {/* Show Remove icon only when image is uploaded and loading is false */}
-                            {data && !loading && (
+                            {data && existingCertificate?.image || !loading && (
                               <Tippy
                                 content="Remove this image?"
                                 className="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2 cursor-pointer"
@@ -383,13 +448,13 @@ const Main = () => {
                     <div className="form-label xl:w-64 xl:!mr-10">
                       <div className="text-left">
                         <div className="flex items-center">
-                          <div className="font-medium">Category</div>
+                          <div className="font-medium">Date</div>
                           <div className="ml-2 px-2 py-0.5 bg-slate-200 text-slate-600 dark:bg-darkmode-300 dark:text-slate-400 text-xs rounded-md">
                             Required
                           </div>
                         </div>
                         <div className="leading-relaxed text-slate-500 text-xs mt-3">
-                          You can add a category or choose from the existing category list.
+                          You can add the date when you received the certificate.
                         </div>
                       </div>
                     </div>
@@ -429,9 +494,15 @@ const Main = () => {
             <button
               type="button"
               className="btn py-3 border-slate-300 dark:border-darkmode-400 text-slate-500 w-full md:w-52"
-              onClick={handleAddCertificate}
-            >
-              Add New Certificate
+              onClick={handleAddOrUpdateCertificate}
+            >{loadingAdd ? (
+              <div className="relative h-6 w-6 flex justify-center items-center">
+                <Lucide className="animate-spin w-4 h-4 text-primary" icon="Loader" />
+              </div>
+            ) : (
+              existingCertificate ? "Update Certificate" : "Add Certificate"
+            )
+              }
             </button>
           </div>
         </div>

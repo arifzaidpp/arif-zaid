@@ -1,31 +1,67 @@
 import {
   Lucide,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownContent,
-  DropdownItem,
   Modal,
   ModalBody,
 } from "@/base-components";
 import { faker as $f } from "@/utils";
 import { useState } from "react";
+import useDeleteCertificate from "../../hooks/certificate/useDeleteCertificate";
+import useGetAllCertificates from "../../hooks/certificate/useGetAllCertificate";
+import { useNavigate } from 'react-router-dom';
+import toast from "react-hot-toast";
+
 
 function Main() {
   const [deleteConfirmationModal, setDeleteConfirmationModal] = useState(false);
+  const [selectedCertificateId, setSelectedCertificateId] = useState(null); // Track selected certificate ID
+  const { certificates, loading, error } = useGetAllCertificates();
+  const { deleteCertificate, loadingDelete } = useDeleteCertificate(); // Use delete hook
+  const navigate = useNavigate();
+
+  // Handle certificate deletion after confirmation
+  const confirmDeleteCertificate = async () => {
+    if (selectedCertificateId) {
+      try {
+        await deleteCertificate(selectedCertificateId); // Call delete function from hook
+        setDeleteConfirmationModal(false); // Close the modal after deletion
+        setSelectedCertificateId(null); // Reset selected certificate ID
+      } catch (error) {
+        console.error("Failed to delete certificate:", error);
+        toast.error("Failed to delete certificate. Please try again.");
+      }
+    }
+  };
+
+
+  // Handle delete certificate button click (opens the modal)
+  const handleDeleteCertificate = (certificateId) => {
+    setSelectedCertificateId(certificateId); // Set the selected project ID
+    setDeleteConfirmationModal(true); // Open the modal
+  };
+
+  // Render loading state
+  if (loading) {
+    return <div className="text-center">Loading projects...</div>;
+  }
+
+  // Render error state
+  if (error) {
+    return <div className="text-red-600 text-center">Error: {error}</div>;
+  }
+
 
   return (
     <>
       <h2 className="intro-y text-lg font-medium mt-10">Edit Certificates</h2>
       <div className="grid grid-cols-12 gap-6 mt-5">
         <div className="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-          <a href="/add-project">
+          <a href="/admin/add-certificate">
             <button className="btn btn-primary shadow-md mr-2">
               Add New Certificate
             </button>
 
           </a>
-          <a href="/add-project">
+          <a href="/admin/add-certificate">
             <button className="btn px-2 box">
               <span className="w-5 h-5 flex items-center justify-center">
                 <Lucide icon="Plus" className="w-4 h-4" />
@@ -50,32 +86,40 @@ function Main() {
           </div>
         </div>
         {/* BEGIN: Users Layout */}
-        {$f().map((faker, fakerKey) => (
-          <div key={fakerKey} className="intro-y col-span-12 md:col-span-6">
+        {certificates.map((certificate, certificateKey) => (
+          <div key={certificateKey} className="intro-y col-span-12 md:col-span-6">
             <div className="box">
               <div className="flex flex-col lg:flex-row items-center p-5">
                 <div className="w-24 h-24 lg:w-12 lg:h-12 image-fit lg:mr-1">
                   <img
-                    alt="Midone Tailwind HTML Admin Template"
+                    alt="Certificate Image"
                     className="rounded-full"
-                    src={faker.photos[0]}
+                    src={certificate.image}
                   />
                 </div>
-                <div className="lg:ml-2 lg:mr-auto text-center lg:text-left mt-3 lg:mt-0">
+                <div className="lg:ml-2 lg:mr-4 text-center lg:text-left mt-3 lg:mt-0">
                   <a href="" className="font-medium">
-                    {faker.users[0].name}
+                    {certificate.name}
                   </a>
                   <div className="text-slate-500 text-xs mt-0.5">
-                    {faker.jobs[0]}
+                    {certificate.category}
+                  </div>
+                </div>
+                <div className="flex mt-4 lg:mr-auto lg:mt-0 items-center space-x-2">
+                  <div className="bg-gray-200 text-gray-700 text-sm px-2 py-1 rounded-lg">
+                    {new Date(certificate.date).toLocaleDateString('en-CA')}
                   </div>
                 </div>
                 <div className="flex mt-4 lg:mt-0">
-                  <button className="btn btn-primary py-1 px-2 mr-2">
+                  <a className="btn btn-primary py-1 px-2 mr-2"
+                    onClick={() => navigate(`/admin/edit-certificate/${certificate._id}`, { state: { certificate } })}>
+                    <Lucide icon="CheckSquare" className="w-4 h-4 mr-1" />{" "}
                     Edit
-                  </button>
+                  </a>
                   <button className="btn btn-outline-secondary py-1 px-2" onClick={() => {
-                    setDeleteConfirmationModal(true);
+                    handleDeleteCertificate(certificate._id);
                   }}>
+                    <Lucide icon="Trash2" className="w-4 h-4 mr-1" />
                     Delete
                   </button>
                 </div>
@@ -83,6 +127,7 @@ function Main() {
             </div>
           </div>
         ))}
+
         {/* BEGIN: Users Layout */}
         {/* END: Pagination */}
         <div className="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center">
@@ -144,42 +189,41 @@ function Main() {
         </div>
         {/* END: Pagination */}
       </div>
-      {/* BEGIN: Delete Confirmation Modal */}
+      {/* BEGIN: Modal for Deleting */}
       <Modal
         show={deleteConfirmationModal}
         onHidden={() => {
           setDeleteConfirmationModal(false);
         }}
       >
-        <ModalBody className="p-0">
-          <div className="p-5 text-center">
-            <Lucide
-              icon="XCircle"
-              className="w-16 h-16 text-danger mx-auto mt-3"
-            />
-            <div className="text-3xl mt-5">Are you sure?</div>
-            <div className="text-slate-500 mt-2">
-              Do you really want to delete these records? <br />
-              This process cannot be undone.
-            </div>
+        <ModalBody className="p-5 text-center">
+          <Lucide icon="XCircle" className="w-16 h-16 text-danger mx-auto mt-3" />
+          <div className="text-3xl mt-5">Are you sure?</div>
+          <div className="text-slate-500 mt-2">
+            Do you really want to delete this certificate? This process cannot be undone.
           </div>
-          <div className="px-5 pb-8 text-center">
+          <div className="flex justify-center mt-5">
             <button
               type="button"
+              onClick={confirmDeleteCertificate} // Trigger project deletion
+              className="btn btn-danger w-24"
+              disabled={loadingDelete} // Disable button if delete is in progress
+            >
+              {loadingDelete ? "Deleting..." : "Delete"}
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-secondary w-24 ml-2"
               onClick={() => {
                 setDeleteConfirmationModal(false);
               }}
-              className="btn btn-outline-secondary w-24 mr-1"
             >
               Cancel
-            </button>
-            <button type="button" className="btn btn-danger w-24">
-              Delete
             </button>
           </div>
         </ModalBody>
       </Modal>
-      {/* END: Delete Confirmation Modal */}
+      {/* END: Modal for Deleting */}
     </>
   );
 }

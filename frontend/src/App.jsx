@@ -52,6 +52,7 @@ function App() {
                 <Route path="edit-skill/:id" element={<AddSkill />} />
                 <Route path="add-certificate" element={<AddCertificate />} />
                 <Route path="certificates" element={<CertificateGrid />} />
+                <Route path="edit-certificate/:id" element={<AddCertificate />} />
                 <Route path="add-education" element={<AddEducation />} />
                 <Route path="educations" element={<EducationList />} />
                 <Route path="inbox" element={<Inbox />} />

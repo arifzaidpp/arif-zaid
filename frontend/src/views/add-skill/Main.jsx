@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 
 
 const Main = () => {
-  const location = useLocation(); 
+  const location = useLocation();
   const existingSkill = location.state?.skill;
 
   console.log(existingSkill);
@@ -31,21 +31,21 @@ const Main = () => {
 
     // If there's a match, return the captured group (the public_id), else return null
     return match ? match[1] : null;
-};
-var publicIdEdit = null;
+  };
+  var publicIdEdit = null;
 
 
-// Check if existingSkill and its image exist
-if (existingSkill?.image) {
+  // Check if existingSkill and its image exist
+  if (existingSkill?.image) {
     const imageUrl = existingSkill.image;
 
     // Extract public_id
-   publicIdEdit = extractPublicId(imageUrl);
-    
+    publicIdEdit = extractPublicId(imageUrl);
+
     console.log(publicIdEdit);  // This will run only if existingSkill has a value
-} else {
-    console.log("No existing project or image found.");
-}
+  } else {
+    console.log("No existing skill or image found.");
+  }
 
 
   const [imagePreview, setImagePreview] = useState(existingSkill?.image || null);
@@ -156,7 +156,7 @@ if (existingSkill?.image) {
     setSections([...sections, newSection]);
   };
 
-  const handleAddOrUpdateProject = async () => {
+  const handleAddOrUpdateSkill = async () => {
     // Check if all fields including the image are valid
     const isValid = isSkillNameValid() && isSkillCategoryValid() && isSkillSectionValid() && isSkillImageValid;
 
@@ -219,7 +219,7 @@ if (existingSkill?.image) {
       setImagePreview(data); // Set the preview when data is available
     }
   }, [data]);
-  
+
   useEffect(() => {
     const skillUpdated = sessionStorage.getItem('skillUpdated');
     if (skillUpdated) {
@@ -498,15 +498,15 @@ if (existingSkill?.image) {
             <button
               type="button"
               className="btn py-3 border-slate-300 dark:border-darkmode-400 text-slate-500 w-full md:w-52"
-              onClick={handleAddOrUpdateProject}
-            >{loadingAdd ? (  
+              onClick={handleAddOrUpdateSkill}
+            >{loadingAdd ? (
               <div className="relative h-6 w-6 flex justify-center items-center">
                 <Lucide className="animate-spin w-4 h-4 text-primary" icon="Loader" />
               </div>
             ) : (
               existingSkill ? "Update Skill" : "Add Skill"
             )
-            }
+              }
             </button>
           </div>
         </div>
