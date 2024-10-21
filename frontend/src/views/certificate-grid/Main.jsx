@@ -3,7 +3,6 @@ import {
   Modal,
   ModalBody,
 } from "@/base-components";
-import { faker as $f } from "@/utils";
 import { useState } from "react";
 import useDeleteCertificate from "../../hooks/certificate/useDeleteCertificate";
 import useGetAllCertificates from "../../hooks/certificate/useGetAllCertificate";
