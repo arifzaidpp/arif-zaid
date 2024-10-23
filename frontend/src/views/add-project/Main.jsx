@@ -46,15 +46,19 @@ var publicIdEdit = null;
 
 
 // Check if existingProject and its image exist
-if (existingProject?.image) {
+useEffect(() => {
+  if (existingProject?.image) {
     const imageUrl = existingProject.image;
-
     // Extract public_id
-   publicIdEdit = extractPublicId(imageUrl);
+    const extractedPublicId = extractPublicId(imageUrl);
+    if (extractedPublicId) {
+      publicIdEdit = extractedPublicId;
+    } else {
+      toast.error("No existing project or image found.");
+    }
+  }
+}, [existingProject]);
 
-} else {
-    toast.error("No existing project or image found.");
-}
 
 
   // Validation states

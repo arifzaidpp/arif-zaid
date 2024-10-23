@@ -35,15 +35,19 @@ const Main = () => {
 
 
   // Check if existingSkill and its image exist
-  if (existingSkill?.image) {
-    const imageUrl = existingSkill.image;
-
-    // Extract public_id
-    publicIdEdit = extractPublicId(imageUrl);
-
-  } else {
-    toast.error("No existing skill or image found.");
-  }
+  useEffect(() => {
+    if (existingSkill?.image) {
+      const imageUrl = existingSkill.image;
+      // Extract public_id
+      const extractedPublicId = extractPublicId(imageUrl);
+      if (extractedPublicId) {
+        publicIdEdit = extractedPublicId;
+      } else {
+        toast.error("No existing skill or image found.");
+      }
+    }
+  }, [existingSkill]);
+  
 
 
   const [imagePreview, setImagePreview] = useState(existingSkill?.image || null);

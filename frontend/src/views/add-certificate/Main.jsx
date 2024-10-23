@@ -33,15 +33,19 @@ const Main = () => {
 
 
   // Check if existingCertificate and its image exist
-  if (existingCertificate?.image) {
-    const imageUrl = existingCertificate.image;
-
-    // Extract public_id
-    publicIdEdit = extractPublicId(imageUrl);
-
-  } else {
-    toast.error("No existing certificate or image found.");
-  }
+  useEffect(() => {
+    if (existingCertificate?.image) {
+      const imageUrl = existingCertificate.image;
+      // Extract public_id
+      const extractedPublicId = extractPublicId(imageUrl);
+      if (extractedPublicId) {
+        publicIdEdit = extractedPublicId;
+      } else {
+        toast.error("No existing certificate or image found.");
+      }
+    }
+  }, [existingCertificate]);
+  
 
   const [date, setDate] = useState(existingCertificate?.date || "");
   const [imagePreview, setImagePreview] = useState(existingCertificate?.image || null);
