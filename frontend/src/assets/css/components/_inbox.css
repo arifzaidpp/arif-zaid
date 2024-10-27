@@ -1,8 +1,8 @@
 .inbox {
     .inbox__item {
-        @apply transition duration-200 ease-in-out transform cursor-pointer;
+        @apply cursor-pointer;
         &:hover {
-            transform: scale(1.02, 1.02);
+            
             @apply relative z-20 shadow-md border-0 rounded;
         }
         &.inbox__item--active {

@@ -7,6 +7,7 @@ import { checkIdParam } from "../middleware/editDetails.js";
 import { addSkill, deleteSkill, editSkill, getAllSkills } from "../controllers/skill.controller.js";
 import { addCertificate, deleteCertificate, editCertificate, getAllCertificates } from "../controllers/certificate.controller.js";
 import { addEducation, deleteEducation, editEducation, getAllEducations } from "../controllers/education.controller.js";
+import { deleteContact, getAllContacts, updateContact } from "../controllers/contact.controller.js";
 
 const router = express.Router();
 
@@ -28,5 +29,8 @@ router.post('/add-education', addEducation);
 router.put('/edit-education/:id', checkIdParam, editEducation);
 router.delete('/delete-education/:id', checkIdParam, deleteEducation);
 router.get('/educations', getAllEducations);
+router.delete('/delete-contact/:id', checkIdParam, deleteContact);
+router.get('/contacts', getAllContacts);
+router.put('/update-contact/:id', checkIdParam, updateContact);
 
 export default router;
