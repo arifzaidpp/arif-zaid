@@ -1291,8 +1291,9 @@ function Main() {
     setMessages((prevMessages) => prevMessages.filter((message) => message.isStared));
   };
 
-  const handleInbox = () => {
+  const handleInbox = async () => {
     setSelectedMenu('Inbox');
+    await refetch();
     generateMessages(contacts); // Generate messages from contacts again
   };
 
