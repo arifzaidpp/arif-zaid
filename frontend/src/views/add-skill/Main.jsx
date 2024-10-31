@@ -70,6 +70,7 @@ const Main = () => {
     { label: 'Marketing', value: 'Marketing' },
     { label: 'Business', value: 'Business' },
     { label: 'Other Tools', value: 'Other Tools' },
+    { label: 'Other Technologies', value: 'Other Technologies' },
   ]);
   const [sections, setSections] = useState([
     { label: '', value: '' },
@@ -78,7 +79,7 @@ const Main = () => {
     { label: 'Fullstack', value: 'Fullstack' },
     { label: 'UI/UX', value: 'UI/UX' },
     { label: 'SEO', value: 'SEO' },
-    { label: 'Other Tools', value: 'Other Tools' },
+    { label: 'Other Tools & Technologies', value: 'Other Tools & Technologies' },
   ]);
   const [touchedSkillName, setTouchedSkillName] = useState(false);
   const [touchedSkillCategory, setTouchedSkillCategory] = useState(false);
