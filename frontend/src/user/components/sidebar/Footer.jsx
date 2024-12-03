@@ -1,5 +1,5 @@
 import React from "react";
-import { FaLinkedin, FaBehance, FaGithub, FaInstagram, FaFacebook } from "react-icons/fa";
+import { FaLinkedin, SiBento , FaGithub, FaInstagram, FaFacebook } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -7,7 +7,7 @@ const Footer = () => {
       {/* Social Media Icons */}
       <div className="flex justify-between w-full max-w-xs">
         <a
-          href="https://www.linkedin.com"
+          href="https://www.linkedin.com/in/arif-zaid-pp/"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="LinkedIn"
@@ -19,19 +19,19 @@ const Footer = () => {
           />
         </a>
         <a
-          href="https://www.behance.net"
+          href="https://bento.me/arif-zaid"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Behance"
           className="flex-grow flex justify-center"
         >
-          <FaBehance
+          <SiBento 
             className="text-gray-700 hover:text-blue-500 transition duration-200"
             size={20}
           />
         </a>
         <a
-          href="https://github.com"
+          href="https://github.com/arifzaidpp"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="GitHub"
@@ -43,7 +43,7 @@ const Footer = () => {
           />
         </a>
         <a
-          href="https://www.instagram.com"
+          href="https://www.instagram.com/arifzaidpp"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Instagram"
@@ -55,7 +55,7 @@ const Footer = () => {
           />
         </a>
         <a
-          href="https://www.facebook.com"
+          href="https://www.facebook.com/arifzaidpp"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Facebook"

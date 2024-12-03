@@ -1,7 +1,7 @@
 
 <h1 align="center">
   <br>
-  <a href="https://arif-zaid.onrender.com/"><img src="https://arif-zaid.onrender.com/Images/Main-icon.png" alt="Chatify" width="200"></a>
+  <a href="https://arifzaid.live/"><img src="https://arifzaid.live/Images/Main-icon.png" alt="Chatify" width="200"></a>
   <br>
   Arif Zaid PP
   <br>
