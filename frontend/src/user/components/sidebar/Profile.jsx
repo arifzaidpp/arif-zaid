@@ -61,7 +61,7 @@ const Profile = () => {
         </div>
         <div className="flex justify-between text-left">
           <span className="font-semibold text-gray-800 text-sm">Age:</span>
-          <span className="text-gray-600 text-sm">19</span>{" "}
+          <span className="text-gray-600 text-sm">20</span>{" "}
           {/* Reduced text size */}
         </div>
       </div>
